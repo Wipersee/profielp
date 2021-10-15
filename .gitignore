@@ -2,6 +2,9 @@
 env/
 .dev.env
 
+#JS Stuff
+.frontend/
+
 #Django stuff
 db.sqlite3
 

@@ -5,12 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "webpack --mode development ./src/index.js --output ./static/frontend/main.js",
-    "build": "webpack --mode production ./src/index.js --output ./static/frontend/main.js"
+    "dev": "webpack --mode development ./src/index.js --output-path ./static/frontend/",
+    "build": "webpack --mode production ./src/index.js --output-path ./static/frontend/"
   },
   "presets": [
-    "@babel/preset-env", "@babel/preset-react"
-  ],  
+    "@babel/preset-env",
+    "@babel/preset-react"
+  ],
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -19,9 +20,14 @@
     "@babel/preset-env": "^7.15.8",
     "@babel/preset-react": "^7.14.5",
     "babel-loader": "^8.2.2",
+    "css-loader": "^6.4.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "webpack": "^5.58.2",
     "webpack-cli": "^4.9.0"
+  },
+  "dependencies": {
+    "antd": "^4.16.13",
+    "style-loader": "^3.3.0"
   }
 }
