@@ -9,3 +9,4 @@ For starting django project need to make all migrations and run dev server via `
 For frontend part need to have NodeJS ~ 14.X
 Go to frontend folder and install all needed packages via ```npm install```
 Then just ```npm run dev```
+# Commit only in dev branch
