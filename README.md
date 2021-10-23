@@ -9,6 +9,8 @@ Basic flow(type this commands in terminal if you are LINUX user):
 
 -----
 For frontend part need to have NodeJS ~ 14.X
-Go to frontend folder and install all needed packages via ```npm install```
-Then just ```npm run dev```
+Go to reactjs folder and install all needed packages via ```npm install```
+Then just ```npm start```
+In order to build project need to build all react project via ```npm run build```
+Then copy static folder to frontend foleder and index.html to frontend/templates/frontend folder
 # Commit only in dev branch
