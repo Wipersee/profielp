@@ -1,0 +1,30 @@
+import { Avatar, Menu, Dropdown } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
+import './css/avatargroup.css'
+import {ExportOutlined, WalletOutlined, SettingOutlined} from '@ant-design/icons';
+
+const menu = (
+    <Menu className="avatar-group-dropdown-menu">
+        <div className="avatar-group-dropdown-menu-avatar">
+        <Avatar onClick={e => e.preventDefault()} size={64} icon={<UserOutlined />} src={'https://thumbor.forbes.com/thumbor/960x0/https%3A%2F%2Fspecials-images.forbesimg.com%2Fimageserve%2F611182f736d1dc35c8cf31d3%2FRick-and-Morty%2F960x0.jpg%3Ffit%3Dscale'}/>
+        </div>
+      <Menu.Item key="0" icon={<WalletOutlined />}>
+        <a href="/" >Cabinet</a>
+      </Menu.Item>
+      <Menu.Item key="1" icon={<SettingOutlined />}>
+        <a href="/" >Settings</a>
+      </Menu.Item>
+      <Menu.Divider />
+      <Menu.Item key="2" icon={<ExportOutlined/>}>Logout</Menu.Item>
+    </Menu>
+  );
+
+const AvatarGroup = () => {
+    return <div className="main-avatar-div">
+        <Dropdown overlay={menu} trigger={['click']}>
+            <Avatar onClick={e => e.preventDefault()} size={64} icon={<UserOutlined />} src={'https://thumbor.forbes.com/thumbor/960x0/https%3A%2F%2Fspecials-images.forbesimg.com%2Fimageserve%2F611182f736d1dc35c8cf31d3%2FRick-and-Morty%2F960x0.jpg%3Ffit%3Dscale'}/>
+        </Dropdown>
+        </div>
+}
+
+export default AvatarGroup;

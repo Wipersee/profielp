@@ -1,17 +1,30 @@
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect
+} from "react-router-dom";
+import {isAuth} from './common/auth'
+import Login from './pages/login/Login'
+import Main from './pages/map/Main'
+import './common/normilize.css'
+import 'antd/dist/antd.css';
+
 
 const App = () => {
-  return <MapContainer center={[50.450001, 30.523333]} zoom={13} scrollWheelZoom={true} style={{height:'100vh', zIndex:'1'}}>
-  <TileLayer
-    attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
-    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-  />
-  <Marker position={[50.450001, 30.523333]}>
-    <Popup>
-      A pretty CSS3 popup. <br /> Easily customizable.
-    </Popup>
-  </Marker>
-</MapContainer>
+  return <Router>
+    <Switch>
+      <Route exact path='/' render={() => (
+        isAuth() ? (
+          <Main />
+        ) : (
+          <Redirect to="/login"/>
+        )
+      )} />
+      <Route path="/login" component={Login}/>
+    </Switch>
+  </Router>
 }
 
 export default App;
