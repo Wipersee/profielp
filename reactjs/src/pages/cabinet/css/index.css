@@ -1,0 +1,22 @@
+.cabinet-header {
+  background-color: #f0f0f0 !important;
+}
+.logo {
+  height: 32px;
+  margin: 16px;
+}
+.logo h2 {
+  font-size: 1.5rem;
+  color: #010101;
+}
+.site-layout {
+  background: #fff;
+}
+.site-layout-background {
+  background: #fff !important;
+}
+.list-of-deals-accept-text:hover,
+.list-of-deals-decline-text:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
