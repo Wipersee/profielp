@@ -24,13 +24,13 @@ const Map = () => {
     //fetch api
     setTimeout(() => setVisible(true), 500);
   };
-  const handleOrder = (id) => {
+  const handleOrder = (id, comment) => {
     //TODO: need to make logic of blocked requests, e.g. when it's already one order => no access to order new one
     message
       .loading("Action in progress..", 2.5)
       .then(() =>
         message.success(
-          `Master ${id} received your apply, please wait for approve`,
+          `Master ${id} received your apply, please wait for approve ${comment}`,
           2.5
         )
       );

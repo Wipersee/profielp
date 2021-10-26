@@ -1,16 +1,5 @@
 import { React, useState } from "react";
-import {
-  Form,
-  Input,
-  InputNumber,
-  Card,
-  Select,
-  Row,
-  Col,
-  Checkbox,
-  Button,
-  AutoComplete,
-} from "antd";
+import { Form, Input, Card, Select, Row, Col, Checkbox, Button } from "antd";
 import "./css/registration.css";
 
 const { Option } = Select;

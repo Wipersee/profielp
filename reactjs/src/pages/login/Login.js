@@ -2,6 +2,7 @@ import { React } from "react";
 import { Form, Input, Button, Row, Col, Card } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import "./css/index.css";
+import {Link} from 'react-router-dom'
 
 const Login = () => {
   const onFinish = (values) => {
@@ -57,7 +58,7 @@ const Login = () => {
               >
                 Log in
               </Button>
-              Or <a href="">register now!</a>
+              <Link to="/registration">&nbsp;Or register now</Link>
             </Form.Item>
           </Form>
         </Card>

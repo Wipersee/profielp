@@ -24,3 +24,8 @@ export function whichRole() {
   const role = 1;
   return role === 0 ? "Customer" : "Performer";
 }
+
+
+export function handleLogout() {
+  //need to write logic of logout 
+}

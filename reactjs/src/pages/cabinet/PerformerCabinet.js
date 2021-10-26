@@ -10,11 +10,13 @@ import {
   RollbackOutlined,
   FieldTimeOutlined,
   OrderedListOutlined,
+  SettingOutlined,
 } from "@ant-design/icons";
 import MyDataList from "./components/MyDataList";
 import MyOrdersList from "./components/MyOrdersList";
 import ListOfDeals from "./components/ListOfDeals";
 import ActiveDeal from "./components/ActiveDeal";
+import PerformerSettings from "./components/PerformerSettings";
 
 const PerformerCabinet = ({ match }) => {
   const menuItems = (
@@ -34,7 +36,10 @@ const PerformerCabinet = ({ match }) => {
       {/* <Menu.Item key="5" icon={<LikeOutlined />}>
         <Link to={`${match.url}/my-likes`}>My likes</Link>
       </Menu.Item> */}
-      <Menu.Item key="6" icon={<RollbackOutlined />}>
+      <Menu.Item key="6" icon={<SettingOutlined />}>
+        <Link to={`${match.url}/settings`}>Settings</Link>
+      </Menu.Item>
+      <Menu.Item key="7" icon={<RollbackOutlined />}>
         <Link to="/">Back to map</Link>
       </Menu.Item>
     </>
@@ -56,6 +61,9 @@ const PerformerCabinet = ({ match }) => {
       </Route>
       <Route path={`${match.url}/list-of-deals`}>
         <ListOfDeals />
+      </Route>
+      <Route path={`${match.url}/settings`}>
+        <PerformerSettings />
       </Route>
     </>
   );

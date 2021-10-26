@@ -25,9 +25,9 @@ const menu = (
     <Menu.Item key="0" icon={<WalletOutlined />}>
       <Link to="/cabinet/my-data">Cabinet</Link>
     </Menu.Item>
-    <Menu.Item key="1" icon={<SettingOutlined />}>
+    {/* <Menu.Item key="1" icon={<SettingOutlined />}>
       <a href="/">Settings</a>
-    </Menu.Item>
+    </Menu.Item> */}
     <Menu.Divider />
     <Menu.Item key="2" icon={<ExportOutlined />}>
       Logout

@@ -16,6 +16,7 @@ const CustomerCabinet = ({ match, menuItems, switchRoutes }) => {
         collapsed={collapsed}
         onCollapse={setCollapsed}
         className="site-layout-background"
+        selectable={false}
       >
         <div className="logo">
           {" "}

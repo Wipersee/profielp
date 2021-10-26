@@ -2,8 +2,6 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link,
-  Redirect,
 } from "react-router-dom";
 import { isAuth, PrivateRoute } from "./common/auth";
 import Login from "./pages/login/Login";

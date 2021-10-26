@@ -1,21 +1,32 @@
 import { Marker, Popup } from "react-leaflet";
-import { Card, Avatar } from "antd";
+import { Card, Avatar, Popover, Input, Row, Col } from "antd";
 import { InfoCircleOutlined, SendOutlined } from "@ant-design/icons";
 import { useState } from "react";
+import CommentInput from "./CommentInput";
 
 const { Meta } = Card;
+const { TextArea } = Input;
 
 const CustomMarker = (props) => {
+  const [visible, setVisible] = useState(false);
   return (
     <>
       <Marker position={props.pos}>
         <Popup>
           <Card
             actions={[
-              <SendOutlined
-                key="order"
-                onClick={() => props.handleOrder(props.id)}
-              />,
+              <Popover
+                placement="leftBottom"
+                title={"Comment to order"}
+                content={
+                  <CommentInput handleOrder={props.handleOrder} id={props.id} />
+                }
+                trigger="click"
+                visible={visible}
+                onVisibleChange={setVisible}
+              >
+                <SendOutlined key="order" />
+              </Popover>,
               <InfoCircleOutlined
                 key="info"
                 onClick={() => props.handleInfo(props.id)}

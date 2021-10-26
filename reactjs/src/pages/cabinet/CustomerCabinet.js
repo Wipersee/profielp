@@ -8,9 +8,11 @@ import {
   SendOutlined,
   FileTextOutlined,
   RollbackOutlined,
+  SettingOutlined,
 } from "@ant-design/icons";
 import MyDataList from "./components/MyDataList";
 import MyOrdersList from "./components/MyOrdersList";
+import CustomerSettings from "./components/CustomerSettings";
 
 const CustomerCabinet = ({ match }) => {
   const menuItems = (
@@ -26,7 +28,10 @@ const CustomerCabinet = ({ match }) => {
                 My likes
             </Link>
         </Menu.Item> */}
-      <Menu.Item key="4" icon={<RollbackOutlined />}>
+      <Menu.Item key="4" icon={<SettingOutlined />}>
+        <Link to={`${match.url}/settings`}>Settings</Link>
+      </Menu.Item>
+      <Menu.Item key="5" icon={<RollbackOutlined />}>
         <Link to="/">Back to map</Link>
       </Menu.Item>
     </>
@@ -42,6 +47,9 @@ const CustomerCabinet = ({ match }) => {
       </Route>
       <Route path={`${match.url}/my-likes`}>
         <h1>My likes</h1>
+      </Route>
+      <Route path={`${match.url}/settings`}>
+        <CustomerSettings />
       </Route>
     </>
   );
