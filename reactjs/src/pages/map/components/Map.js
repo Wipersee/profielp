@@ -1,8 +1,27 @@
 import { useEffect, useState } from "react";
-import { MapContainer, TileLayer } from "react-leaflet";
+import { MapContainer, TileLayer, useMapEvents, Marker, Popup } from "react-leaflet";
 import CustomMarker from "./CustomMarker";
 import CustomDrawer from "./CustomDrawer";
 import { message } from "antd";
+
+function LocationMarker() {
+  const [position, setPosition] = useState(null)
+  const map = useMapEvents({
+    click() {
+      map.locate()
+    },
+    locationfound(e) {
+      setPosition(e.latlng)
+      map.flyTo(e.latlng, map.getZoom())
+    },
+  })
+
+  return position === null ? null : (
+    <Marker position={position}>
+      <Popup>You are here</Popup>
+    </Marker>
+  )
+}
 
 const Map = () => {
   const [visible, setVisible] = useState(false);
@@ -21,7 +40,7 @@ const Map = () => {
   ];
 
   const handleInfo = (props) => {
-    //fetch api
+    //TODO: fetch api
     setTimeout(() => setVisible(true), 500);
   };
   const handleOrder = (id, comment) => {
@@ -36,15 +55,22 @@ const Map = () => {
       );
   };
 
+  const addMarker = (e) => {
+    console.log(e)
+    
+  }
+
   return (
     <>
       {" "}
       <MapContainer
         center={[50.450001, 30.523333]}
         zoom={13}
+        easeLinearity={0.35}
         scrollWheelZoom={true}
         style={{ height: "100vh", zIndex: "1" }}
         zoomControl={false}
+        onclick={addMarker}
       >
         <TileLayer
           attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
@@ -60,6 +86,7 @@ const Map = () => {
             handleInfo={handleInfo}
           />
         ))}
+        <LocationMarker />
       </MapContainer>
       <CustomDrawer
         visible={visible}
