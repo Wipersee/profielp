@@ -1,5 +1,6 @@
 from django.db import models
-
+from django.contrib.auth.models import AbstractUser
+import uuid
 
 class Role(models.Model):
     roles = [
@@ -9,7 +10,7 @@ class Role(models.Model):
     ]
 
     # Fields
-    role_id = models.UUIDField(primary_key=True, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     role = models.CharField(max_length=16, choices=roles, help_text="User role")
 
     # Methods
@@ -17,7 +18,7 @@ class Role(models.Model):
         """
         String for representing the Role object (in Admin site etc.)
         """
-        return f"Roles {self.roles}"
+        return f"{self.role}"
 
 
 class PerformerSpecialization(models.Model):
@@ -34,7 +35,7 @@ class PerformerSpecialization(models.Model):
         """
         String for representing the Role object (in Admin site etc.)
         """
-        return f"Performer specializations {self.performer_specializations}"
+        return f"{self.performer_specialization}"
 
 
 class PerformerStatus(models.Model):
@@ -51,31 +52,34 @@ class PerformerStatus(models.Model):
     performer_status = models.CharField(max_length=16, choices=performer_statuses,
                                         help_text="Performer specializations")
 
+    class Meta:
+        verbose_name_plural = "Performer statuses"
+        verbose_name="Performer status"
+
     # Methods
     def __str__(self):
         """
         String for representing the Role object (in Admin site etc.)
         """
-        return f"Performer status {self.performer_statuses}"
+        return f"Performer status {self.performer_status}"
 
 
-class User(models.Model):
+class User(AbstractUser):
     # Fields
-    user_uuid = models.UUIDField(primary_key=True, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
-    role_id = models.ForeignKey("Role", on_delete=models.DO_NOTHING)  # many to one relationship with the Role table
-
-    first_name = models.CharField(max_length=63, help_text="First name")
-    last_name = models.CharField(max_length=63, help_text="Last name")
-    username = models.CharField(max_length=31, help_text="Username")
-    avatar = models.ImageField(help_text="Image for the avatar")
+    role_id = models.ForeignKey("Role", on_delete=models.DO_NOTHING, null=True)  # many to one relationship with the Role table
+    phone_number = models.CharField(max_length=31, help_text="User phone number}", null=True)  # TODO add regex (optional)
+    # first_name = models.CharField(max_length=63, help_text="First name")
+    # last_name = models.CharField(max_length=63, help_text="Last name")
+    # avatar = models.ImageField(help_text="Image for the avatar")
     # avatar = models.URLField(help_text="Link for the storage with the image for the avatar (s3 path ?)")
 
-    phone_number = models.CharField(max_length=31, help_text="User phone number}")  # TODO add regex (optional)
-    email = models.EmailField(help_text="Enter email")
-    password = models.CharField(max_length=255, help_text="User password (hashed)")  # TODO and hashing JWT etc
+    
+    # email = models.EmailField(help_text="Enter email")
+    # password = models.CharField(max_length=255, help_text="User password (hashed)")  # TODO and hashing JWT etc
 
-    registration_date = models.DateTimeField(help_text="Date and time of the registration", editable=False)
+    # registration_date = models.DateTimeField(help_text="Date and time of the registration", editable=False)
 
     # Methods
     def get_something_for_example(self):
@@ -85,34 +89,39 @@ class User(models.Model):
         return f"Example name: {self.username}"
 
     def __str__(self):
-        return "User"
+        return f"User {self.username}"
 
 
 class Customer(User):
     # Fields
-    uuid = models.ForeignKey("User", primary_key=True, editable=False, on_delete=models.CASCADE, related_name='+')
 
-    address = models.TextField(help_text="Customer's address")
-    latitude = models.FloatField(help_text="Customer's address latitude")
-    longitude = models.FloatField(help_text="Customer's address longitude")
+    address = models.TextField(help_text="Customer's address", blank=True, null=True)
+    latitude = models.FloatField(help_text="Customer's address latitude", blank=True, null=True)
+    longitude = models.FloatField(help_text="Customer's address longitude", blank=True, null=True)
 
     is_blocked = models.BooleanField(help_text="True if user is blocked by Admin", default=False)
 
+    class Meta:
+        verbose_name_plural = "Customers"
+        verbose_name="Customer"
+
     def __str__(self):
-        return "Customer"
+        return  f"Customer {self.username}"
 
 
 class Admin(User):
     # Fields
-    uuid = models.ForeignKey("User", primary_key=True, editable=False, on_delete=models.CASCADE, related_name='+')
+
+    class Meta:
+        verbose_name_plural = "Admins"
+        verbose_name="Admin"
 
     def __str__(self):
-        return "Admin"
+        return  f"Admin {self.username}"
 
 
 class Performer(User):
     # Fields
-    uuid = models.ForeignKey("User", primary_key=True, editable=False, on_delete=models.CASCADE, related_name='+')
 
     performer_specialization_id = models.ForeignKey(
         "PerformerSpecialization",
@@ -138,5 +147,9 @@ class Performer(User):
 
     is_blocked = models.BooleanField(help_text="True if user is blocked by Admin", default=False)
 
+    class Meta:
+        verbose_name_plural = "Performers"
+        verbose_name="Performer"
+
     def __str__(self):
-        return "Performer"
+        return f"Performer {self.username}"
