@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 import uuid
 
+
 class Role(models.Model):
     roles = [
         ('ADMN', 'admin'),
@@ -54,7 +55,7 @@ class PerformerStatus(models.Model):
 
     class Meta:
         verbose_name_plural = "Performer statuses"
-        verbose_name="Performer status"
+        verbose_name = "Performer status"
 
     # Methods
     def __str__(self):
@@ -68,14 +69,16 @@ class User(AbstractUser):
     # Fields
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
-    role_id = models.ForeignKey("Role", on_delete=models.DO_NOTHING, null=True)  # many to one relationship with the Role table
-    phone_number = models.CharField(max_length=31, help_text="User phone number}", null=True)  # TODO add regex (optional)
+    role_id = models.ForeignKey("Role", on_delete=models.DO_NOTHING,
+                                null=True)  # many to one relationship with the Role table
+    phone_number = models.CharField(max_length=31, help_text="User phone number}",
+                                    null=True)  # TODO add regex (optional)
+
     # first_name = models.CharField(max_length=63, help_text="First name")
     # last_name = models.CharField(max_length=63, help_text="Last name")
     # avatar = models.ImageField(help_text="Image for the avatar")
     # avatar = models.URLField(help_text="Link for the storage with the image for the avatar (s3 path ?)")
 
-    
     # email = models.EmailField(help_text="Enter email")
     # password = models.CharField(max_length=255, help_text="User password (hashed)")  # TODO and hashing JWT etc
 
@@ -103,10 +106,10 @@ class Customer(User):
 
     class Meta:
         verbose_name_plural = "Customers"
-        verbose_name="Customer"
+        verbose_name = "Customer"
 
     def __str__(self):
-        return  f"Customer {self.username}"
+        return f"Customer {self.username}"
 
 
 class Admin(User):
@@ -114,10 +117,10 @@ class Admin(User):
 
     class Meta:
         verbose_name_plural = "Admins"
-        verbose_name="Admin"
+        verbose_name = "Admin"
 
     def __str__(self):
-        return  f"Admin {self.username}"
+        return f"Admin {self.username}"
 
 
 class Performer(User):
@@ -149,7 +152,7 @@ class Performer(User):
 
     class Meta:
         verbose_name_plural = "Performers"
-        verbose_name="Performer"
+        verbose_name = "Performer"
 
     def __str__(self):
         return f"Performer {self.username}"
