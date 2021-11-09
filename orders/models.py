@@ -26,7 +26,6 @@ class OrderStatus(models.Model):
 class Complaint(models.Model):
     # Fields
     complaint_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    order_id = models.ForeignKey("Order", editable=False, on_delete=models.DO_NOTHING, related_name='+')
 
     admin_id = models.ForeignKey(
         "users.Admin",
