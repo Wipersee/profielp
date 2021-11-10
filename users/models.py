@@ -27,7 +27,7 @@ class PerformerSpecialization(models.Model):
     performer_specializations = [('PL', 'plumber'), ('EL', 'electrician')]
 
     # Fields
-    performer_specialization_id = models.UUIDField(primary_key=True, editable=False)
+    performer_specialization_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     performer_specialization = models.CharField(max_length=16, choices=performer_specializations,
                                                 help_text="Performer specializations")
 
@@ -49,7 +49,7 @@ class PerformerStatus(models.Model):
     ]
 
     # Fields
-    performer_status_id = models.UUIDField(primary_key=True, editable=False)
+    performer_status_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     performer_status = models.CharField(max_length=16, choices=performer_statuses,
                                         help_text="Performer specializations")
 
@@ -76,9 +76,6 @@ class User(AbstractUser):
 
     # avatar = models.ImageField(help_text="Image for the avatar")
     # avatar = models.URLField(help_text="Link for the storage with the image for the avatar (s3 path ?)")
-
-    class Meta:
-        abstract = True
 
     # Methods
     def get_something_for_example(self):
@@ -142,7 +139,7 @@ class Performer(User):
 
     description = models.TextField(help_text="Few words of the Performer about himself/herself")
 
-    avg_price_per_hour = models.FloatField(help_text="Few words of the Performer about himself/herself")
+    avg_price_per_hour = models.FloatField(help_text="Average price per hour")
 
     is_blocked = models.BooleanField(help_text="True if user is blocked by Admin", default=False)
 

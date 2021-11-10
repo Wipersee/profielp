@@ -32,10 +32,7 @@ class Complaint(models.Model):
         on_delete=models.DO_NOTHING,
         help_text="ID of the Admin that assigned to the complaint"
     )
-    customer_id = models.ForeignKey("users.Customer", editable=False, on_delete=models.DO_NOTHING, related_name='+')
-    performer_id = models.ForeignKey("users.Performer", editable=False, on_delete=models.DO_NOTHING, related_name='+')
-
-    requester_role_id = models.ForeignKey("users.Role", on_delete=models.DO_NOTHING)
+    requester_id = models.ForeignKey("users.User", editable=False, on_delete=models.DO_NOTHING, related_name='+')
 
     comment = models.TextField(help_text="Requester complaint text", blank=True, null=True)
     admin_comment = models.TextField(help_text="Admin comment", blank=True, null=True)
@@ -59,7 +56,7 @@ class Order(models.Model):
     performer_id = models.ForeignKey("users.Performer", on_delete=models.DO_NOTHING, related_name='+')
 
     order_status_id = models.ForeignKey("OrderStatus", on_delete=models.DO_NOTHING, related_name='+')
-    complaint_id = models.OneToOneField("Complaint", on_delete=models.DO_NOTHING, related_name='+')
+    complaint_id = models.OneToOneField("Complaint", null=True, blank=True, on_delete=models.DO_NOTHING, related_name='+')
 
     address = models.TextField(help_text="Order address", blank=True, null=True)
     latitude = models.FloatField(help_text="Order address latitude")
@@ -69,8 +66,8 @@ class Order(models.Model):
 
     is_high_priority = models.BooleanField(help_text="True if order is urgent", default=False)
 
-    date = models.DateTimeField(help_text="Date and time of the order creation", )
-    completion_date = models.DateTimeField(help_text="Date and time of the order completion")
+    date = models.DateTimeField(help_text="Date and time of the order creation")
+    completion_date = models.DateTimeField(null=True, blank=True, help_text="Date and time of the order completion")
 
     customer_approved = models.BooleanField(help_text="True if customer approved the work", default=False)
     performer_approved = models.BooleanField(help_text="True if performer approved the work", default=False)
