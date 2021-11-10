@@ -74,15 +74,11 @@ class User(AbstractUser):
     phone_number = models.CharField(max_length=31, help_text="User phone number}",
                                     null=True)  # TODO add regex (optional)
 
-    # first_name = models.CharField(max_length=63, help_text="First name")
-    # last_name = models.CharField(max_length=63, help_text="Last name")
     # avatar = models.ImageField(help_text="Image for the avatar")
     # avatar = models.URLField(help_text="Link for the storage with the image for the avatar (s3 path ?)")
 
-    # email = models.EmailField(help_text="Enter email")
-    # password = models.CharField(max_length=255, help_text="User password (hashed)")  # TODO and hashing JWT etc
-
-    # registration_date = models.DateTimeField(help_text="Date and time of the registration", editable=False)
+    class Meta:
+        abstract = True
 
     # Methods
     def get_something_for_example(self):

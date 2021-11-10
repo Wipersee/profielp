@@ -11,7 +11,7 @@ class OrderStatus(models.Model):
     ]
 
     # Fields
-    order_status_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    order_status_id = models.UUIDField(primary_key=True, default=uuid.uuid4, )
     order_status = models.CharField(max_length=16, choices=order_statuses,
                                     help_text="Order status")
 
@@ -25,7 +25,7 @@ class OrderStatus(models.Model):
 
 class Complaint(models.Model):
     # Fields
-    complaint_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    complaint_id = models.UUIDField(primary_key=True, default=uuid.uuid4, )
 
     admin_id = models.ForeignKey(
         "users.Admin",
@@ -40,8 +40,8 @@ class Complaint(models.Model):
     comment = models.TextField(help_text="Requester complaint text", blank=True, null=True)
     admin_comment = models.TextField(help_text="Admin comment", blank=True, null=True)
 
-    date = models.DateTimeField(help_text="Date and time of the complaint creating", editable=False)
-    resolve_date = models.DateTimeField(help_text="Date and time of the complaint resolving", editable=False)
+    date = models.DateTimeField(help_text="Date and time of the complaint creating", )
+    resolve_date = models.DateTimeField(help_text="Date and time of the complaint resolving", )
 
     class Meta:
         verbose_name_plural = "Complaints"
@@ -53,13 +53,13 @@ class Complaint(models.Model):
 
 class Order(models.Model):
     # Fields
-    order_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    order_id = models.UUIDField(primary_key=True, default=uuid.uuid4, )
 
-    customer_id = models.ForeignKey("users.Customer", editable=False, on_delete=models.DO_NOTHING, related_name='+')
-    performer_id = models.ForeignKey("users.Performer", editable=False, on_delete=models.DO_NOTHING, related_name='+')
+    customer_id = models.ForeignKey("users.Customer", on_delete=models.DO_NOTHING, related_name='+')
+    performer_id = models.ForeignKey("users.Performer", on_delete=models.DO_NOTHING, related_name='+')
 
     order_status_id = models.ForeignKey("OrderStatus", on_delete=models.DO_NOTHING, related_name='+')
-    complaint_id = models.ForeignKey("Complaint", on_delete=models.DO_NOTHING, related_name='+')
+    complaint_id = models.OneToOneField("Complaint", on_delete=models.DO_NOTHING, related_name='+')
 
     address = models.TextField(help_text="Order address", blank=True, null=True)
     latitude = models.FloatField(help_text="Order address latitude")
@@ -69,7 +69,7 @@ class Order(models.Model):
 
     is_high_priority = models.BooleanField(help_text="True if order is urgent", default=False)
 
-    date = models.DateTimeField(help_text="Date and time of the order creation", editable=False)
+    date = models.DateTimeField(help_text="Date and time of the order creation", )
     completion_date = models.DateTimeField(help_text="Date and time of the order completion")
 
     customer_approved = models.BooleanField(help_text="True if customer approved the work", default=False)
