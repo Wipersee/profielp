@@ -4,11 +4,7 @@ import uuid
 
 
 class Role(models.Model):
-    roles = [
-        ('ADMN', 'admin'),
-        ('CUST', 'customer'),
-        ('PERF', 'performer')
-    ]
+    roles = [("ADMN", "admin"), ("CUST", "customer"), ("PERF", "performer")]
 
     # Fields
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -24,12 +20,17 @@ class Role(models.Model):
 
 class PerformerSpecialization(models.Model):
     # TODO add more specializations
-    performer_specializations = [('PL', 'plumber'), ('EL', 'electrician')]
+    performer_specializations = [("PL", "plumber"), ("EL", "electrician")]
 
     # Fields
-    performer_specialization_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    performer_specialization = models.CharField(max_length=16, choices=performer_specializations,
-                                                help_text="Performer specializations")
+    performer_specialization_id = models.UUIDField(
+        primary_key=True, default=uuid.uuid4, editable=False
+    )
+    performer_specialization = models.CharField(
+        max_length=16,
+        choices=performer_specializations,
+        help_text="Performer specializations",
+    )
 
     # Methods
     def __str__(self):
@@ -42,16 +43,19 @@ class PerformerSpecialization(models.Model):
 class PerformerStatus(models.Model):
     # TODO make statuses more informative
     performer_statuses = [
-        ('NO', 'no orders today'),
-        ('OVER', 'the working day is over'),
-        ('MAKING', 'making order'),
-        ('FINISHED', 'finished order')
+        ("NO", "no orders today"),
+        ("OVER", "the working day is over"),
+        ("MAKING", "making order"),
+        ("FINISHED", "finished order"),
     ]
 
     # Fields
-    performer_status_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    performer_status = models.CharField(max_length=16, choices=performer_statuses,
-                                        help_text="Performer specializations")
+    performer_status_id = models.UUIDField(
+        primary_key=True, default=uuid.uuid4, editable=False
+    )
+    performer_status = models.CharField(
+        max_length=16, choices=performer_statuses, help_text="Performer specializations"
+    )
 
     class Meta:
         verbose_name_plural = "Performer statuses"
@@ -69,10 +73,12 @@ class User(AbstractUser):
     # Fields
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
-    role_id = models.ForeignKey("Role", on_delete=models.DO_NOTHING,
-                                null=True)  # many to one relationship with the Role table
-    phone_number = models.CharField(max_length=31, help_text="User phone number}",
-                                    null=True)  # TODO add regex (optional)
+    role_id = models.ForeignKey(
+        "Role", on_delete=models.DO_NOTHING, null=True
+    )  # many to one relationship with the Role table
+    phone_number = models.CharField(
+        max_length=31, help_text="User phone number", null=True
+    )  # TODO add regex (optional)
 
     # avatar = models.ImageField(help_text="Image for the avatar")
     # avatar = models.URLField(help_text="Link for the storage with the image for the avatar (s3 path ?)")
@@ -92,10 +98,16 @@ class Customer(User):
     # Fields
 
     address = models.TextField(help_text="Customer's address", blank=True, null=True)
-    latitude = models.FloatField(help_text="Customer's address latitude", blank=True, null=True)
-    longitude = models.FloatField(help_text="Customer's address longitude", blank=True, null=True)
+    latitude = models.FloatField(
+        help_text="Customer's address latitude", blank=True, null=True
+    )
+    longitude = models.FloatField(
+        help_text="Customer's address longitude", blank=True, null=True
+    )
 
-    is_blocked = models.BooleanField(help_text="True if user is blocked by Admin", default=False)
+    is_blocked = models.BooleanField(
+        help_text="True if user is blocked by Admin", default=False
+    )
 
     class Meta:
         verbose_name_plural = "Customers"
@@ -122,26 +134,36 @@ class Performer(User):
     performer_specialization_id = models.ForeignKey(
         "PerformerSpecialization",
         on_delete=models.DO_NOTHING,
-        help_text="ID of the Performer's  specialization from the PerformerSpecialization table"
+        help_text="ID of the Performer's  specialization from the PerformerSpecialization table",
+        null=True,
     )
 
     status_is = models.ForeignKey(
         "PerformerStatus",
         on_delete=models.DO_NOTHING,
-        help_text="ID of the Performer's current status from the PerformerStatus table"
+        help_text="ID of the Performer's current status from the PerformerStatus table",
+        null=True,
     )
 
-    work_day_start = models.TimeField(help_text="Performer's work day start")
-    work_day_end = models.TimeField(help_text="Performer's work day end")
+    work_day_start = models.TimeField(help_text="Performer's work day start", null=True)
+    work_day_end = models.TimeField(help_text="Performer's work day end", null=True)
 
-    latitude = models.FloatField(help_text="Performer's last order latitude")
-    longitude = models.FloatField(help_text="Performer's last order longitude")
+    latitude = models.FloatField(help_text="Performer's last order latitude", null=True)
+    longitude = models.FloatField(
+        help_text="Performer's last order longitude", null=True
+    )
 
-    description = models.TextField(help_text="Few words of the Performer about himself/herself")
+    description = models.TextField(
+        help_text="Few words of the Performer about himself/herself", null=True
+    )
 
-    avg_price_per_hour = models.FloatField(help_text="Average price per hour")
+    avg_price_per_hour = models.FloatField(
+        help_text="Average price per hour", null=True
+    )
 
-    is_blocked = models.BooleanField(help_text="True if user is blocked by Admin", default=False)
+    is_blocked = models.BooleanField(
+        help_text="True if user is blocked by Admin", default=False
+    )
 
     class Meta:
         verbose_name_plural = "Performers"
