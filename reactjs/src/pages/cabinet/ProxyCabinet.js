@@ -1,11 +1,12 @@
 import CustomerCabinet from "./CustomerCabinet";
 import PerformerCabinet from "./PerformerCabinet";
+import { useSelector } from "react-redux";
 
 const ProxyCabinet = ({ match }) => {
-  const role = 1; //TODO: when API will be done rewrite to getting this from localStorage
-  if (role === 1) {
+  const { role } = useSelector((state) => state.userReducer);
+  if (role === 'CUST') {
     return <CustomerCabinet match={match} />;
-  } else if (role === 2) {
+  } else if (role === 'PERF') {
     return <PerformerCabinet match={match} />;
   } else {
     return <h1>Sorry, no role with that id</h1>;

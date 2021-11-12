@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Modal, Row, Col, Form, Input, message, Button } from "antd";
+import axiosInstance from "../../../common/axios";
 
 const ChangePasswordModal = ({ visible, setVisible }) => {
   const [confirmLoading, setConfirmLoading] = useState(false);
@@ -7,13 +8,32 @@ const ChangePasswordModal = ({ visible, setVisible }) => {
 
   const onFinish = (values) => {
     setConfirmLoading(true);
-    setTimeout(() => {
+    axiosInstance.put('users/password', {
+      password: values.password,
+      old_password: values.old_password,
+      repeat_password: values.repeat_password,
+    }).then(res => {
+      console.log(res)
       setVisible(false);
       setConfirmLoading(false);
-      console.log("Received values of form: ", values);
       message.success("Password changed");
       form.resetFields();
-    }, 2000);
+    }).catch((err) => {
+      setConfirmLoading(false);
+      var keys = Object.keys(err.response.data);
+      const errors = []
+      keys.forEach(function (key) {
+        errors.push(err.response.data[key])
+      });
+      message.error(errors.map(item => <span style={{ color: 'red' }}>{item[0]}<br /></span>))
+    })
+    // setTimeout(() => {
+    //   setVisible(false);
+    //   setConfirmLoading(false);
+    //   console.log("Received values of form: ", values);
+    //   message.success("Password changed");
+    //   form.resetFields();
+    // }, 2000);
   };
 
   const handleCancel = () => {
@@ -54,6 +74,19 @@ const ChangePasswordModal = ({ visible, setVisible }) => {
               id={"change_password_form"}
             >
               <Form.Item
+                name="old_password"
+                label="Old password"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your password!",
+                  },
+                ]}
+                hasFeedback
+              >
+                <Input.Password />
+              </Form.Item>
+              <Form.Item
                 name="password"
                 label="Password"
                 rules={[
@@ -68,7 +101,7 @@ const ChangePasswordModal = ({ visible, setVisible }) => {
               </Form.Item>
 
               <Form.Item
-                name="confirm"
+                name="repeat_password"
                 label="Repeat"
                 dependencies={["password"]}
                 hasFeedback

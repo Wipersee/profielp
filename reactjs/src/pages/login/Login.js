@@ -2,12 +2,28 @@ import { React } from "react";
 import { Form, Input, Button, Row, Col, Card } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import "./css/index.css";
-import {Link} from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
+import axiosInstance from './../../common/axios'
+import { useDispatch, useSelector } from "react-redux";
 
 const Login = () => {
+  let history = useHistory();
+  const dispatch = useDispatch();
   const onFinish = (values) => {
-    alert(`username: ${values.username}, password: ${values.password}`);
     //TODO: after sending to backend and successful login -> redirect to root URL /
+    axiosInstance.post('/token/', {
+      username: values.username,
+      password: values.password
+    }).then(response => {
+      axiosInstance.defaults.headers['Authorization'] = "Bearer " + response.data.access;
+      localStorage.setItem('access_token', response.data.access);
+      localStorage.setItem('refresh_token', response.data.refresh)
+      localStorage.setItem("isLogged", true)
+      dispatch({ type: "SET_LOGIN", payload: true })
+      history.push("/");
+    }).catch(err => console.error(err));
+
+
   };
 
   return (

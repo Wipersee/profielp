@@ -1,16 +1,15 @@
 import { Route, Redirect } from "react-router";
-
-export function isAuth() {
-  // function for checking if user is logged in
-  return true;
-}
+import { useDispatch, useSelector } from "react-redux";
+import rootReducer from "../store/reducers/rootReducer";
+import store from './../store/store'
 
 export function PrivateRoute({ component: Component, ...rest }) {
+  const { login } = useSelector((state) => state.loginReducer);
   return (
     <Route
       {...rest}
       render={(props) => {
-        return isAuth() === true ? (
+        return login ? (
           <Component {...props} />
         ) : (
           <Redirect to="/login" />
@@ -20,9 +19,9 @@ export function PrivateRoute({ component: Component, ...rest }) {
   );
 }
 
-export function whichRole() {
-  const role = 1;
-  return role === 0 ? "Customer" : "Performer";
+
+export function whichRole(role) {
+  return role === 'CUST' ? "Customer" : "Performer";
 }
 
 

@@ -3,21 +3,15 @@ import {
   Switch,
   Route,
 } from "react-router-dom";
-import { isAuth, PrivateRoute } from "./common/auth";
+import { PrivateRoute } from "./common/auth";
 import Login from "./pages/login/Login";
 import Registration from "./pages/registration/Registration";
 import Main from "./pages/map/Main";
 import ProxyCabinet from "./pages/cabinet/ProxyCabinet";
 import "./common/normilize.css";
 import "antd/dist/antd.css";
-import {useEffect} from 'react'
 
 const App = () => {
-
-  useEffect(() => {
-    //TODO: make logic of checking if user is logged in
-    console.log("Logged")
-  }, [])
 
   return (
     <Router>
