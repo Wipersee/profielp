@@ -1,17 +1,17 @@
 import { React } from "react";
-import { Form, Input, Button, Row, Col, Card } from "antd";
+import { Form, Input, Button, Row, Col, Card, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import "./css/index.css";
 import { Link, useHistory } from 'react-router-dom'
 import axiosInstance from './../../common/axios'
 import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
 
 const Login = () => {
   let history = useHistory();
   const dispatch = useDispatch();
   const onFinish = (values) => {
-    //TODO: after sending to backend and successful login -> redirect to root URL /
-    axiosInstance.post('/token/', {
+    axios.post('http://localhost:8000/api/token/', { //TODO: before prod change this link
       username: values.username,
       password: values.password
     }).then(response => {
@@ -21,7 +21,9 @@ const Login = () => {
       localStorage.setItem("isLogged", true)
       dispatch({ type: "SET_LOGIN", payload: true })
       history.push("/");
-    }).catch(err => console.error(err));
+    }).catch(err => {
+      message.error(err.response.data.detail)
+    });
 
 
   };

@@ -24,6 +24,8 @@ const AvatarGroup = (props) => {
       localStorage.removeItem('refresh_token');
       axiosInstance.defaults.headers['Authorization'] = null;
       localStorage.removeItem("isLogged");
+      localStorage.removeItem("user")
+      dispatch({ type: 'SET_USER', payload: {} })
       dispatch({ type: "SET_LOGIN", payload: false })
     }).catch(err => console.log(err));
   }

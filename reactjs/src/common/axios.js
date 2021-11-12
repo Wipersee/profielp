@@ -1,4 +1,5 @@
 import axios from "axios";
+import store from './../store/store'
 
 const axiosInstance = axios.create({
     baseURL: 'http://127.0.0.1:8000/api/',
@@ -13,8 +14,8 @@ axiosInstance.interceptors.response.use(
     response => response,
     error => {
         const originalRequest = error.config;
-
-        if (error.response.status === 401 && error.response.statusText === "Unauthorized") {
+        console.log(error.response)
+        if (error.response.status === 401 && error.response.statusText === "Unauthorized" && error.response.data.messages[0].token_type === 'access') {
             const refresh_token = localStorage.getItem('refresh_token');
 
             return axiosInstance
@@ -30,12 +31,26 @@ axiosInstance.interceptors.response.use(
                     return axiosInstance(originalRequest);
                 })
                 .catch(err => {
-                    console.log(err)
+                    console.log("ERR")
+                    localStorage.removeItem('user')
+                    localStorage.removeItem('refresh_token')
+                    localStorage.removeItem('access_token')
+                    localStorage.setItem('isLogged', false)
+                    store.dispatch({ type: 'SET_LOGIN', payload: false })
                 });
         }
         // else if (error.response.status === 400 && error.response.statusText !== "Bad R") {
         //     localStorage.setItem("isLogged", false)
         // }
+        else if (error.response.status === 401 && error.response.statusText === "Unauthorized" && error.response.data.code === "token_not_valid") {
+            console.log("ERR")
+            localStorage.removeItem('user')
+            localStorage.removeItem('refresh_token')
+            localStorage.removeItem('access_token')
+            localStorage.setItem('isLogged', false)
+            store.dispatch({ type: 'SET_LOGIN', payload: false })
+        }
+        console.log("ee")
         return Promise.reject(error);
     }
 );
