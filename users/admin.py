@@ -1,6 +1,10 @@
 from django.contrib import admin
 from .models import *
 from django.contrib.auth.admin import UserAdmin
+from rest_framework_simplejwt import token_blacklist
+
+
+# admin.site.register(token_blacklist.models.BlacklistedToken)
 
 
 class CustomerAdmin(UserAdmin):

@@ -72,7 +72,7 @@ class PerformerStatus(models.Model):
 class User(AbstractUser):
     # Fields
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-
+    email = models.EmailField(unique=True)
     role_id = models.ForeignKey(
         "Role", on_delete=models.DO_NOTHING, null=True
     )  # many to one relationship with the Role table

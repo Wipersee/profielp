@@ -97,8 +97,6 @@ class PerformerUpdateSerializer(serializers.ModelSerializer):
 
 
 class CustomerSerializer(serializers.ModelSerializer):
-    # password = serializers.CharField(min_length=8, write_only=True)
-
     class Meta:
         model = Customer
         fields = (
@@ -117,6 +115,42 @@ class CustomerSerializer(serializers.ModelSerializer):
         response["role"] = RoleSerializer(instance.role_id).data.get("role", None)
         response["on_site"] = (datetime.now(timezone.utc) - instance.date_joined).days
         return response
+
+
+class CustomerRegistrationSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(
+        write_only=True, required=True, validators=[validators.validate_password]
+    )
+
+    class Meta:
+        model = Customer
+        extra_kwargs = {"password": {"write_only": True}}
+        fields = ("username", "email", "password", "phone_number")
+
+    def create(self, validated_data):
+        password = validated_data.pop("password")
+        user = Customer(**validated_data, role_id=Role.objects.get(role="CUST"))
+        user.set_password(password)
+        user.save()
+        return user
+
+
+class PerformerRegistrationSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(
+        write_only=True, required=True, validators=[validators.validate_password]
+    )
+
+    class Meta:
+        model = Performer
+        extra_kwargs = {"password": {"write_only": True}}
+        fields = ("username", "email", "password", "phone_number")
+
+    def create(self, validated_data):
+        password = validated_data.pop("password")
+        user = Customer(**validated_data, role_id=Role.objects.get(role="CUST"))
+        user.set_password(password)
+        user.save()
+        return user
 
 
 class PerformerSerializer(serializers.ModelSerializer):

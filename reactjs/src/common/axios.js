@@ -31,7 +31,6 @@ axiosInstance.interceptors.response.use(
                     return axiosInstance(originalRequest);
                 })
                 .catch(err => {
-                    console.log("ERR")
                     localStorage.removeItem('user')
                     localStorage.removeItem('refresh_token')
                     localStorage.removeItem('access_token')
@@ -43,14 +42,12 @@ axiosInstance.interceptors.response.use(
         //     localStorage.setItem("isLogged", false)
         // }
         else if (error.response.status === 401 && error.response.statusText === "Unauthorized" && error.response.data.code === "token_not_valid") {
-            console.log("ERR")
             localStorage.removeItem('user')
             localStorage.removeItem('refresh_token')
             localStorage.removeItem('access_token')
             localStorage.setItem('isLogged', false)
             store.dispatch({ type: 'SET_LOGIN', payload: false })
         }
-        console.log("ee")
         return Promise.reject(error);
     }
 );

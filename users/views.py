@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -7,6 +6,8 @@ from . import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .services.bl import get_serializer_table
+from rest_framework import generics
+from .models import Customer, Performer
 
 # Create your views here.
 
@@ -17,7 +18,6 @@ class GetUser(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        # some union of logic
         return Response(get_user(request.user))
 
     def patch(self, request):
@@ -57,3 +57,10 @@ class ChangePassword(APIView):
             serializer.save()
             return Response("Success")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CustomerRegistration(generics.CreateAPIView):
+    queryset = Customer.objects.all()
+    serializer_class = serializers.CustomerRegistrationSerializer
+    permission_classes = (AllowAny,)
+    authentication_classes = ()

@@ -1,7 +1,8 @@
 import { React, useState } from "react";
-import { Form, Input, Card, Select, Row, Col, Checkbox, Button } from "antd";
+import { Form, Input, Card, Select, Row, Col, Checkbox, Button, Radio, message } from "antd";
 import "./css/registration.css";
-
+import axiosInstance from "../../common/axios";
+import { useHistory } from 'react-router-dom'
 const { Option } = Select;
 
 const formItemLayout = {
@@ -37,9 +38,27 @@ const tailFormItemLayout = {
 
 const Registration = () => {
   const [form] = Form.useForm();
+  const history = useHistory()
 
   const onFinish = (values) => {
-    console.log("Received values of form: ", values);
+    if (values.role == "CUST") {
+      axiosInstance.post('users/registration/customer', {
+        username: values.username,
+        password: values.password,
+        phone_number: values.phone,
+        email: values.email,
+      }).then(res => {
+        message.success("User created, please login")
+        history.push('/login')
+      }).catch(err => {
+        var keys = Object.keys(err.response.data);
+        const errors = []
+        keys.forEach(function (key) {
+          errors.push(err.response.data[key])
+        });
+        message.error(errors.map(item => <span style={{ color: 'red' }}>{item[0]}<br /></span>))
+      })
+    }
   };
 
   const prefixSelector = (
@@ -161,6 +180,19 @@ const Registration = () => {
               />
             </Form.Item>
 
+            <Form.Item label="Role" name="role" rules={[
+              {
+                required: true,
+                message: 'Please choose role!',
+              },
+            ]}>
+              <Radio.Group optionType="button">
+                <Radio.Button value="CUST">Customer</Radio.Button>
+                <Radio.Button value="PERF">Performer</Radio.Button>
+              </Radio.Group>
+
+            </Form.Item>
+
             <Form.Item
               name="agreement"
               valuePropName="checked"
@@ -174,6 +206,7 @@ const Registration = () => {
               ]}
               {...tailFormItemLayout}
             >
+
               <Checkbox>
                 I have read the <a href="">agreement</a>
               </Checkbox>

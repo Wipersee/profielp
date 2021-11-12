@@ -10,4 +10,5 @@ urlpatterns = [
         name="logout",
     ),
     path("password", views.ChangePassword.as_view()),
+    path("registration/customer", views.CustomerRegistration.as_view()),
 ]
