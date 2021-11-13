@@ -8,6 +8,7 @@ class OrderStatus(models.Model):
         ("ACCPTD", "Accepted"),
         ("INPRGRS", "In progress"),
         ("ADMN", "Complaint under consideration by the administrator"),
+        ("DONE", "Order is finished successfully")
     ]
 
     # Fields
@@ -16,7 +17,7 @@ class OrderStatus(models.Model):
         default=uuid.uuid4,
     )
     order_status = models.CharField(
-        max_length=16, choices=order_statuses, help_text="Order status"
+        max_length=16, choices=order_statuses, unique=True, help_text="Order status"
     )
 
     class Meta:
@@ -79,8 +80,10 @@ class Order(models.Model):
     )
 
     order_status_id = models.ForeignKey(
-        "OrderStatus", on_delete=models.DO_NOTHING, related_name="+"
+        "OrderStatus", on_delete=models.DO_NOTHING, related_name="+",
+        default=OrderStatus.objects.get(order_status="CRTD")
     )
+
     complaint_id = models.OneToOneField(
         "Complaint",
         null=True,
