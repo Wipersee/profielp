@@ -31,6 +31,18 @@ class PerformerStatusSerializer(serializers.ModelSerializer):
         fields = ("performer_status",)
 
 
+class CustomerUpdateAvatar(serializers.ModelSerializer):
+    class Meta:
+        model = Customer
+        fields = ("avatar",)
+
+    def update(self, instance, validated_data):
+        instance.update()
+        print(validated_data)
+        instance.save()
+        return instance
+
+
 class CustomerUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
@@ -108,6 +120,7 @@ class CustomerSerializer(serializers.ModelSerializer):
             "address",
             "latitude",
             "longitude",
+            "avatar",
         )
 
     def to_representation(self, instance):
@@ -125,26 +138,6 @@ class CustomerRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
         extra_kwargs = {"password": {"write_only": True}}
-        fields = ("username", "email", "password", "phone_number")
-
-    def create(self, validated_data):
-        password = validated_data.pop("password")
-        user = Customer(**validated_data, role_id=Role.objects.get(role="CUST"))
-        user.set_password(password)
-        user.save()
-        return user
-
-
-class PerformerRegistrationSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(
-        write_only=True, required=True, validators=[validators.validate_password]
-    )
-
-    class Meta:
-        model = Customer
-        extra_kwargs = {
-            "password": {"write_only": True},
-        }
         fields = ("username", "email", "password", "phone_number")
 
     def create(self, validated_data):
@@ -191,6 +184,18 @@ class PerformerRegistrationSerializer(serializers.ModelSerializer):
         return user
 
 
+class PerformerShortSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Performer
+        fields = (
+            "id",
+            "username",
+            "latitude",
+            "longitude",
+            "avatar",
+        )
+
+
 class PerformerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Performer
@@ -204,6 +209,7 @@ class PerformerSerializer(serializers.ModelSerializer):
             "longitude",
             "avg_price_per_hour",
             "description",
+            "avatar",
         )
 
     def to_representation(self, instance):

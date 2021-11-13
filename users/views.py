@@ -8,6 +8,8 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from .services.bl import get_serializer_table
 from rest_framework import generics
 from .models import Customer, Performer, PerformerSpecialization
+from .services.filters import ProductFilter
+from django_filters import rest_framework as filters
 
 # Create your views here.
 
@@ -28,6 +30,14 @@ class GetUser(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UpdateUserAvatar(APIView):
+    def patch(self, request):
+        model = get_serializer_table(request.user)[0]
+        print(request.data.get("file", None))
+        model.update(avatar=request.data.get("file", None))
+        return Response("success")
 
 
 class LogoutAndBlacklistRefreshTokenForUserView(APIView):
@@ -78,3 +88,24 @@ class PerformerSpecializationsView(generics.ListAPIView):
     serializer_class = serializers.PerformerSpecializationSerializer
     permission_classes = (AllowAny,)
     authentication_classes = ()
+
+
+# TODO: REWRITE TO ISAUTH!!!!
+class PerformersView(generics.ListAPIView):
+    queryset = Performer.objects.all()
+    serializer_class = serializers.PerformerShortSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = ProductFilter
+    permission_classes = (AllowAny,)
+    authentication_classes = ()
+
+
+class PerformerDetaildView(generics.RetrieveAPIView):
+    serializer_class = serializers.PerformerSerializer
+    permission_classes = (AllowAny,)
+    lookup_url_kwarg = "pk"
+
+    def get_queryset(self):
+        pk = self.kwargs.get(self.lookup_url_kwarg)
+        performer = Performer.objects.filter(id=pk)
+        return performer

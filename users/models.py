@@ -80,7 +80,11 @@ class User(AbstractUser):
         max_length=31, help_text="User phone number", unique=True
     )  # TODO add regex (optional)
 
-    # avatar = models.ImageField(help_text="Image for the avatar")
+    avatar = models.ImageField(
+        help_text="Image for the avatar",
+        upload_to="avatars",
+        null=True,
+    )
     # avatar = models.URLField(help_text="Link for the storage with the image for the avatar (s3 path ?)")
 
     # Methods

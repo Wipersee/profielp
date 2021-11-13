@@ -13,7 +13,6 @@ const ChangePasswordModal = ({ visible, setVisible }) => {
       old_password: values.old_password,
       repeat_password: values.repeat_password,
     }).then(res => {
-      console.log(res)
       setVisible(false);
       setConfirmLoading(false);
       message.success("Password changed");

@@ -5,10 +5,16 @@ from users.serializers import (
     PerformerSerializer,
     CustomerUpdateSerializer,
     PerformerUpdateSerializer,
+    CustomerUpdateAvatar,
 )
 
 user_tables = {
-    "CUST": (Customer, CustomerSerializer, CustomerUpdateSerializer),
+    "CUST": (
+        Customer,
+        CustomerSerializer,
+        CustomerUpdateSerializer,
+        CustomerUpdateAvatar,
+    ),
     "PERF": (Performer, PerformerSerializer, PerformerUpdateSerializer),
 }
 

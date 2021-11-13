@@ -6,7 +6,6 @@ import { formItemLayout, tailFormItemLayout, prefixSelector } from './layout'
 const { Option } = Select;
 
 const PerformerForm = (props) => {
-    console.log(props)
     const [form] = Form.useForm();
     const history = useHistory()
 

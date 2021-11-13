@@ -10,10 +10,11 @@ import { Link } from "react-router-dom";
 import { whichRole } from "./auth";
 import axiosInstance from "./axios";
 import { useDispatch, useSelector } from "react-redux";
+import { url } from './url'
 
 const AvatarGroup = (props) => {
   const dispatch = useDispatch();
-  const { role } = useSelector((state) => state.userReducer);
+  const { role, avatar } = useSelector((state) => state.userReducer);
 
 
   const handleLogout = () => {
@@ -38,7 +39,7 @@ const AvatarGroup = (props) => {
           size={64}
           icon={<UserOutlined />}
           src={
-            "https://thumbor.forbes.com/thumbor/960x0/https%3A%2F%2Fspecials-images.forbesimg.com%2Fimageserve%2F611182f736d1dc35c8cf31d3%2FRick-and-Morty%2F960x0.jpg%3Ffit%3Dscale"
+            `${url}${avatar}`
           }
         />
       </div>
@@ -67,7 +68,7 @@ const AvatarGroup = (props) => {
           size={props.size}
           icon={<UserOutlined />}
           src={
-            "https://thumbor.forbes.com/thumbor/960x0/https%3A%2F%2Fspecials-images.forbesimg.com%2Fimageserve%2F611182f736d1dc35c8cf31d3%2FRick-and-Morty%2F960x0.jpg%3Ffit%3Dscale"
+            `${url}${avatar}`
           }
         />
       </Dropdown>
