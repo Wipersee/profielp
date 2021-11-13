@@ -37,7 +37,7 @@ class PerformerSpecialization(models.Model):
         """
         String for representing the Role object (in Admin site etc.)
         """
-        return f"{self.performer_specialization}"
+        return f"Specialization: {self.performer_specialization}"
 
 
 class PerformerStatus(models.Model):
@@ -77,7 +77,7 @@ class User(AbstractUser):
         "Role", on_delete=models.DO_NOTHING, null=True
     )  # many to one relationship with the Role table
     phone_number = models.CharField(
-        max_length=31, help_text="User phone number", null=True
+        max_length=31, help_text="User phone number", unique=True
     )  # TODO add regex (optional)
 
     # avatar = models.ImageField(help_text="Image for the avatar")

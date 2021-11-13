@@ -10,7 +10,7 @@ from .models import (
 )
 from datetime import datetime, timezone
 import django.contrib.auth.password_validation as validators
-from .services.common import get_performer, get_customer
+from .services.common import get_performer, get_customer, is_required
 
 
 class RoleSerializer(serializers.ModelSerializer):
@@ -141,13 +141,51 @@ class PerformerRegistrationSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        model = Performer
-        extra_kwargs = {"password": {"write_only": True}}
+        model = Customer
+        extra_kwargs = {
+            "password": {"write_only": True},
+        }
         fields = ("username", "email", "password", "phone_number")
 
     def create(self, validated_data):
         password = validated_data.pop("password")
         user = Customer(**validated_data, role_id=Role.objects.get(role="CUST"))
+        user.set_password(password)
+        user.save()
+        return user
+
+
+class PerformerRegistrationSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(
+        write_only=True, required=True, validators=[validators.validate_password]
+    )
+    performer_specialization_id = serializers.CharField(required=True)
+    avg_price_per_hour = serializers.FloatField(required=True)
+
+    class Meta:
+        model = Performer
+        extra_kwargs = {
+            "password": {"write_only": True},
+        }
+        fields = (
+            "username",
+            "email",
+            "password",
+            "phone_number",
+            "avg_price_per_hour",
+            "performer_specialization_id",
+        )
+
+    def create(self, validated_data):
+        password = validated_data.pop("password")
+        performer_specialization_id = validated_data.pop("performer_specialization_id")
+        user = Performer(
+            **validated_data,
+            role_id=Role.objects.get(role="PERF"),
+            performer_specialization_id=PerformerSpecialization.objects.get(
+                performer_specialization=performer_specialization_id
+            )
+        )
         user.set_password(password)
         user.save()
         return user
@@ -209,3 +247,9 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
+
+
+class PerformerSpecializationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PerformerSpecialization
+        fields = ["performer_specialization"]

@@ -7,7 +7,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .services.bl import get_serializer_table
 from rest_framework import generics
-from .models import Customer, Performer
+from .models import Customer, Performer, PerformerSpecialization
 
 # Create your views here.
 
@@ -62,5 +62,19 @@ class ChangePassword(APIView):
 class CustomerRegistration(generics.CreateAPIView):
     queryset = Customer.objects.all()
     serializer_class = serializers.CustomerRegistrationSerializer
+    permission_classes = (AllowAny,)
+    authentication_classes = ()
+
+
+class PerformerRegistration(generics.CreateAPIView):
+    queryset = Performer.objects.all()
+    serializer_class = serializers.PerformerRegistrationSerializer
+    permission_classes = (AllowAny,)
+    authentication_classes = ()
+
+
+class PerformerSpecializationsView(generics.ListAPIView):
+    queryset = PerformerSpecialization.objects.all()
+    serializer_class = serializers.PerformerSpecializationSerializer
     permission_classes = (AllowAny,)
     authentication_classes = ()

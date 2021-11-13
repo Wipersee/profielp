@@ -11,4 +11,6 @@ urlpatterns = [
     ),
     path("password", views.ChangePassword.as_view()),
     path("registration/customer", views.CustomerRegistration.as_view()),
+    path("registration/performer", views.PerformerRegistration.as_view()),
+    path("performerSpecializations", views.PerformerSpecializationsView.as_view()),
 ]
