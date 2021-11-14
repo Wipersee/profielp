@@ -10,6 +10,9 @@ from rest_framework import generics
 from .models import Customer, Performer, PerformerSpecialization
 from .services.filters import ProductFilter
 from django_filters import rest_framework as filters
+import io
+from PIL import Image
+import binascii
 
 # Create your views here.
 
@@ -32,12 +35,13 @@ class GetUser(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class UpdateUserAvatar(APIView):
-    def patch(self, request):
-        model = get_serializer_table(request.user)[0]
-        print(request.data.get("file", None))
-        model.update(avatar=request.data.get("file", None))
-        return Response("success")
+class UpdateUserAvatar(generics.UpdateAPIView):
+
+    serializer_class = serializers.ChangeUserAvatarSerializer
+
+    def get_object(self):
+        user = self.request.user
+        return user
 
 
 class LogoutAndBlacklistRefreshTokenForUserView(APIView):
@@ -92,12 +96,17 @@ class PerformerSpecializationsView(generics.ListAPIView):
 
 # TODO: REWRITE TO ISAUTH!!!!
 class PerformersView(generics.ListAPIView):
-    queryset = Performer.objects.all()
     serializer_class = serializers.PerformerShortSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = ProductFilter
     permission_classes = (AllowAny,)
     authentication_classes = ()
+
+    def get_queryset(self):
+        queryset = Performer.objects.filter(
+            latitude__isnull=False, longitude__isnull=False
+        )
+        return queryset
 
 
 class PerformerDetaildView(generics.RetrieveAPIView):
