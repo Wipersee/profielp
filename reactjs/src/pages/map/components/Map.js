@@ -42,6 +42,7 @@ const Map = () => {
     axiosInstance.get("users/performers").then(response => {
       setPerformers(response.data)
       dispatch({ action: 'SET_PERFORMERS', payload: response.data })
+      console.log(response.data)
     }).catch(err => console.log(err))
   }, [])
 
@@ -80,7 +81,8 @@ const Map = () => {
           attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {performers.map(({ id, username, latitude, longitude }) => (
+        {console.log(performers.length)}
+        {performers.length !== 0 ? performers.map(({ id, username, latitude, longitude }) => (
           <CustomMarker
             key={id}
             id={id}
@@ -89,7 +91,7 @@ const Map = () => {
             handleOrder={handleOrder}
             handleInfo={handleInfo}
           />
-        ))}
+        )) : <></>}
       </MapContainer>
       <CustomDrawer
         visible={visible}

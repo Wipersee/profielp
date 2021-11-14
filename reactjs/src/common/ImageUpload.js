@@ -3,31 +3,50 @@ import { Upload, message, Button } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import axiosInstance from "./axios";
+import { useHistory } from "react-router";
 
 const ImageUpload = () => {
-  const props = {
-    name: 'file',
-    action: 'http://localhost:8000/api/users/me/avatar',
-    headers: {
-      authorization: "Bearer " + localStorage.getItem('access_token'),
-    },
-    method: "patch",
-    onChange(info) {
-      if (info.file.status !== 'uploading') {
-        console.log(info.file, info.fileList);
-      }
-      if (info.file.status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === 'error') {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    },
+  const history = useHistory()
+
+  const [selectedFile, setSelectedFile] = useState(null)
+  // On file select (from the pop up)
+  const onFileChange = event => {
+    // Update the state
+    setSelectedFile({ selectedFile: event.target.files[0] });
   };
+
+  // On file upload (click the upload button)
+  const onFileUpload = () => {
+    if (selectedFile) {
+      // Create an object of formData
+      const formData = new FormData();
+
+      // Update the formData object
+      formData.append(
+        "avatar",
+        selectedFile.selectedFile,
+      )
+      // Request made to the backend api
+      // Send formData object
+      axiosInstance.patch("users/me/avatar", formData, {
+        headers: {
+          'content-type': 'multipart/form-data'
+        }
+      }).then(response => history.push('/'));
+    }
+    else {
+      message.info("Select file first")
+    }
+  };
+
   return (
     <>
-      <Upload {...props}>
-        <Button icon={<UploadOutlined />}>Click to Upload</Button>
-      </Upload>
+      <input type="file" onChange={onFileChange} />
+      <br />
+      <br />
+      <Button type="primary" icon={<UploadOutlined />} size='12' onClick={onFileUpload}>
+        Upload
+      </Button>
     </>
   );
 };

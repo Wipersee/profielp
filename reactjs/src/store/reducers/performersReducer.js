@@ -1,4 +1,4 @@
-const initialState = { performers: [{ id: '' }] }
+const initialState = { performers: [] }
 
 export const performersReducer = (state = initialState, action) => {
     switch (action.type) {

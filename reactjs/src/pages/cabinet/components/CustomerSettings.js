@@ -4,6 +4,7 @@ import { useState } from "react";
 import ChangePasswordModal from "./ChangePasswordModal";
 import { useDispatch, useSelector } from "react-redux";
 import axiosInstance from "../../../common/axios";
+import { url } from "../../../common/url";
 const { Option } = Select;
 
 const formItemLayout = {
@@ -183,7 +184,7 @@ const CustomerSettings = () => {
           <h2>Avatar:</h2>
           <Image
             width={300}
-            src="https://thumbor.forbes.com/thumbor/960x0/https%3A%2F%2Fspecials-images.forbesimg.com%2Fimageserve%2F611182f736d1dc35c8cf31d3%2FRick-and-Morty%2F960x0.jpg%3Ffit%3Dscale"
+            src={url + data.avatar}
           />
           <div>
             <ImageUpload />

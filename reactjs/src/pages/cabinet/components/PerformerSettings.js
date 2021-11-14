@@ -1,5 +1,10 @@
-import { Form, Input, Card, Select, Row, Col, Checkbox, Button } from "antd";
-
+import { Form, Input, Image, Select, Row, Col, Button, message } from "antd";
+import ImageUpload from "./../../../common/ImageUpload";
+import { useState } from "react";
+import ChangePasswordModal from "./ChangePasswordModal";
+import { useDispatch, useSelector } from "react-redux";
+import axiosInstance from "../../../common/axios";
+import { url } from "../../../common/url";
 const { Option } = Select;
 
 const formItemLayout = {
@@ -33,20 +38,29 @@ const tailFormItemLayout = {
   },
 };
 
-const initialValues = {
-  firstname: "Martin",
-  lastname: "Spancer",
-  username: "testuser",
-  email: "test@test.ua",
-  phone: "0678945128",
-  address: "Kyiv, Chreshatick 31",
-};
 
-const CustomerSettings = () => {
+const PerformerSettings = () => {
+  const data = useSelector((state) => state.userReducer)
+  const dispatch = useDispatch()
+
   const [form] = Form.useForm();
-
+  const [visible, setVisible] = useState(false);
   const onFinish = (values) => {
-    console.log("Received values of form: ", values);
+    axiosInstance.patch('/users/me', {
+      first_name: values.first_name,
+      last_name: values.last_name,
+      email: values.email,
+      phone_number: values.phone_number,
+      address: values.address
+    })
+      .then(response => {
+        dispatch({ type: "SET_USER", payload: { ...response.data, role: data.role, username: data.username, on_site: data.on_site } });
+        localStorage.setItem('user', JSON.stringify({ ...response.data, role: data.role, username: data.username, on_site: data.on_site }));
+        message.success("Data is update")
+      })
+      .catch(error => {
+        message.error(error)
+      });
   };
 
   const prefixSelector = (
@@ -63,21 +77,23 @@ const CustomerSettings = () => {
 
   return (
     <>
+      <ChangePasswordModal visible={visible} setVisible={setVisible} />
       <Row>
         <h1>Settings</h1>
       </Row>
-      <Row justify={"center"}>
-        <Col col={24}>
+      <Row justify={"space-around"}>
+        <Col col={18}>
           <Form
             {...formItemLayout}
             form={form}
-            name="register"
+            name="settings"
             onFinish={onFinish}
-            initialValues={{ ...initialValues, prefix: "38" }}
+            initialValues={{ ...data, prefix: "38" }}
             scrollToFirstError
+            style={{ width: "100%" }}
           >
             <Form.Item
-              name="firstname"
+              name="first_name"
               label="First name"
               rules={[
                 {
@@ -88,7 +104,7 @@ const CustomerSettings = () => {
               <Input />
             </Form.Item>
             <Form.Item
-              name="lastname"
+              name="last_name"
               label="Last name"
               rules={[
                 {
@@ -97,20 +113,6 @@ const CustomerSettings = () => {
               ]}
             >
               <Input />
-            </Form.Item>
-
-            <Form.Item
-              name="username"
-              label="Username"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your nickname!",
-                  whitespace: true,
-                },
-              ]}
-            >
-              <Input disabled />
             </Form.Item>
 
             <Form.Item
@@ -131,7 +133,7 @@ const CustomerSettings = () => {
             </Form.Item>
 
             <Form.Item
-              name="phone"
+              name="phone_number"
               label="Phone Number"
               rules={[
                 {
@@ -170,15 +172,27 @@ const CustomerSettings = () => {
               </Col>
               <Col col={12}>
                 <Form.Item {...tailFormItemLayout}>
-                  <Button type="link">Change password</Button>
+                  <Button type="link" onClick={() => setVisible(true)}>
+                    Change password
+                  </Button>
                 </Form.Item>
               </Col>
             </Row>
           </Form>
+        </Col>
+        <Col col={6}>
+          <h2>Avatar:</h2>
+          <Image
+            width={300}
+            src={url + data.avatar}
+          />
+          <div>
+            <ImageUpload />
+          </div>
         </Col>
       </Row>
     </>
   );
 };
 
-export default CustomerSettings;
+export default PerformerSettings;

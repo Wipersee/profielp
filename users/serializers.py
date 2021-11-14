@@ -43,6 +43,19 @@ class CustomerUpdateAvatar(serializers.ModelSerializer):
         return instance
 
 
+class ChangeUserAvatarSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["avatar"]
+
+    def update(self, instance, validated_data):
+        instance.avatar.delete(save=False)
+        photo_data = validated_data["avatar"]
+        instance.avatar.save(f"{instance.username}_photo.jpg", photo_data, save=True)
+
+        return instance
+
+
 class CustomerUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
@@ -177,7 +190,7 @@ class PerformerRegistrationSerializer(serializers.ModelSerializer):
             role_id=Role.objects.get(role="PERF"),
             performer_specialization_id=PerformerSpecialization.objects.get(
                 performer_specialization=performer_specialization_id
-            )
+            ),
         )
         user.set_password(password)
         user.save()
