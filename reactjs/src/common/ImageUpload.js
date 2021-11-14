@@ -32,7 +32,7 @@ const ImageUpload = () => {
         headers: {
           'content-type': 'multipart/form-data'
         }
-      }).then(response => history.push('/'));
+      }).then(response => message.success("Avatar updated, return to main page and refresh"));
     }
     else {
       message.info("Select file first")

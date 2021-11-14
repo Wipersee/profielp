@@ -51,7 +51,7 @@ const DescriptionItem = ({ title, content }) => (
 
 const CustomDrawer = (props) => {
   const { performer } = props;
-  console.log(performer)
+  console.log(props)
   return (
     <Drawer
       title={`Info about master ${performer.username}`}
@@ -83,7 +83,7 @@ const CustomDrawer = (props) => {
       </Row>
       <Row>
         <Col span={12}>
-          <DescriptionItem title="Specialization" content={performer.specialization} />
+          <DescriptionItem title="Specialization" content={performer.specialization.performer_specialization} />
         </Col>
       </Row>
       <p className="site-description-item-profile-p">Short description</p>

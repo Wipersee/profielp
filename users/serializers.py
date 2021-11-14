@@ -22,7 +22,10 @@ class RoleSerializer(serializers.ModelSerializer):
 class PerformerSpecializationSerializer(serializers.ModelSerializer):
     class Meta:
         model = PerformerSpecialization
-        fields = ("performer_specialization",)
+        fields = (
+            "performer_specialization_id",
+            "performer_specialization",
+        )
 
 
 class PerformerStatusSerializer(serializers.ModelSerializer):
@@ -88,6 +91,8 @@ class CustomerUpdateSerializer(serializers.ModelSerializer):
 
 
 class PerformerUpdateSerializer(serializers.ModelSerializer):
+    # performer_specialization_id = serializers.CharField()
+
     class Meta:
         model = Performer
         fields = (
@@ -99,6 +104,7 @@ class PerformerUpdateSerializer(serializers.ModelSerializer):
             "latitude",
             "longitude",
             "avg_price_per_hour",
+            "performer_specialization_id",
         )
 
     def update(self, instance, validated_data):
@@ -116,6 +122,11 @@ class PerformerUpdateSerializer(serializers.ModelSerializer):
         )
         performer.phone_number = validated_data.get(
             "phone_number", performer.phone_number
+        )
+        performer.performer_specialization_id = PerformerSpecialization.objects.get(
+            performer_specialization_id=validated_data.get(
+                "performer_specialization_id"
+            ).performer_specialization_id
         )
         performer.save()
         return instance
@@ -229,7 +240,7 @@ class PerformerSerializer(serializers.ModelSerializer):
         response = super().to_representation(instance)
         response["specialization"] = PerformerSpecializationSerializer(
             instance.performer_specialization_id
-        ).data.get("performer_specialization", None)
+        ).data
         response["role"] = RoleSerializer(instance.role_id).data.get("role", None)
         response["status"] = PerformerStatusSerializer(instance.status_is).data.get(
             "performer_status", None
@@ -266,9 +277,3 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
-
-
-class PerformerSpecializationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PerformerSpecialization
-        fields = ["performer_specialization"]

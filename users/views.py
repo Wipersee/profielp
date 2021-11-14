@@ -16,7 +16,6 @@ import io
 from PIL import Image
 import binascii
 
-
 # Create your views here.
 
 

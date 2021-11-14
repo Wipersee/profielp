@@ -10,12 +10,13 @@ import Main from "./pages/map/Main";
 import ProxyCabinet from "./pages/cabinet/ProxyCabinet";
 import "./common/normilize.css";
 import "antd/dist/antd.css";
-
+import License from './pages/registration/components/license'
 const App = () => {
 
   return (
     <Router>
       <Switch>
+        <Route path="/agreement" component={License} />
         <Route path="/login" component={Login} />
         <Route path="/registration" component={Registration} />
         <PrivateRoute path="/cabinet" component={ProxyCabinet} />

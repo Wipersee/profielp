@@ -38,7 +38,7 @@ const CustomMarker = (props) => {
               title="Performer"
               description={<p>Username: {props.username} &nbsp;</p>}
               avatar={
-                <Avatar src="https://pbs.twimg.com/profile_images/897250392022540288/W1T-QjML_400x400.jpg" />
+                <Avatar src={props.avatar} />
               }
             />
           </Card>
