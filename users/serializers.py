@@ -96,6 +96,7 @@ class PerformerUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Performer
         fields = (
+            "id",
             "first_name",
             "last_name",
             "email",
@@ -136,6 +137,7 @@ class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
         fields = (
+            "id",
             "username",
             "first_name",
             "last_name",

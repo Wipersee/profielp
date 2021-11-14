@@ -26,18 +26,29 @@ function LocationMarker() {
 const Map = () => {
   const dispatch = useDispatch()
   const [visible, setVisible] = useState(false);
+  const [performer, setPerformer] = useState({ id: '', specialization: {} })
+  const { data } = useSelector((state) => state.performersReducer)
+  const { id } = useSelector(state => state.userReducer)
+  const [crd, setCrd] = useState()
 
 
   useEffect(() => {
     // axiosInstance.get("users/performers").then(response => {
     //   setPerformers(response.data)
+    //   dispatch({ action: 'SET_PERFORMERS', payload: response.data })
     //   console.log(response.data)
     // }).catch(err => console.log(err))
     dispatch(
       fetchData("/users/performers", "PERFORMERS")
     );
-  }, [])
+    navigator.geolocation.getCurrentPosition((v) => setCrd(v.coords), (r) => console.log(r), options);
 
+  }, [])
+  var options = {
+    enableHighAccuracy: true,
+    timeout: 5000,
+    maximumAge: 0
+  };
 
   const handleInfo = (id) => {
     axiosInstance.get(`users/performers/${id}`).then(response => {
@@ -45,16 +56,28 @@ const Map = () => {
       setVisible(true)
     }).catch(err => console.log(err))
   };
-  const handleOrder = (id, comment) => {
+  const handleOrder = (perf_id, comment, addess, is_high_priority) => {
     //TODO: need to make logic of blocked requests, e.g. when it's already one order => no access to order new one
-    message
-      .loading("Action in progress..", 2.5)
-      .then(() =>
-        message.success(
-          `Master ${id} received your apply, please wait for approve ${comment}`,
-          2.5
-        )
-      );
+    // message
+    //   .loading("Action in progress..", 2.5)
+    //   .then(() =>
+    //     message.success(
+    //       `Master ${id} received your apply, please wait for approve ${comment}`,
+    //       2.5
+    //     )
+    //   );
+
+    axiosInstance.post('orders/', {
+      performer_id: perf_id,
+      address: addess,
+      latitude: crd.latitude,
+      longitude: crd.longitude,
+      comment: comment,
+      is_high_priority: is_high_priority,
+      customer_id: id,
+    }).then(response => {
+      if (response.status === 200) { message.success('Order created') }
+    }).catch(err => message.error(err.response.data.map(item => <p>{item}</p>)))
   };
   const addMarker = (e) => {
     console.log(e)
@@ -84,10 +107,9 @@ const Map = () => {
             handleOrder={handleOrder}
             handleInfo={handleInfo}
           />
-        )) : <></>
-        }
+        )) : <></>}
         <LocationMarker />
-      </MapContainer >
+      </MapContainer>
       <CustomDrawer
         visible={visible}
         setVisible={setVisible}

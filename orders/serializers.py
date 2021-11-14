@@ -8,9 +8,7 @@ from orders.services.bl import get_order_status
 class OrderStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderStatus
-        fields = (
-            "order_status",
-        )
+        fields = ("order_status",)
 
 
 class ComplaintSerializer(serializers.ModelSerializer):
@@ -31,10 +29,8 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = [
-            "order_id",
             "customer_id",
             "performer_id",
-            "order_status_id",
             "complaint_id",
             "address",
             "latitude",
@@ -44,25 +40,34 @@ class OrderSerializer(serializers.ModelSerializer):
             "date",
             "completion_date",
             "customer_approved",
-            "performer_approved"
+            "performer_approved",
         ]
 
     def create(self, validated_data):
-        order = Order(**validated_data)
+        order = Order(
+            **validated_data,
+            order_status_id=OrderStatus.objects.get(order_status="CRTD")
+        )
         order.save()
         return order
 
     def update(self, instance, validated_data):
-        instance.completion_date = validated_data.get('completion_date', instance.completion_date)
-        instance.customer_approved = validated_data.get('customer_approved', instance.customer_approved)
-        instance.performer_approved = validated_data.get('performer_approved', instance.performer_approved)
+        instance.completion_date = validated_data.get(
+            "completion_date", instance.completion_date
+        )
+        instance.customer_approved = validated_data.get(
+            "customer_approved", instance.customer_approved
+        )
+        instance.performer_approved = validated_data.get(
+            "performer_approved", instance.performer_approved
+        )
 
-        if (instance.customer_approved and instance.performer_approved):
+        if instance.customer_approved and instance.performer_approved:
             instance.order_status_id, error_message = get_order_status(status="DONE")
         else:
             # if order status was changed, change order status id
             old_order_status_id = instance.order_status_id
-            new_order_status_id = validated_data.get('order_status_id', None)
+            new_order_status_id = validated_data.get("order_status_id", None)
 
             if new_order_status_id and old_order_status_id != new_order_status_id:
                 instance.order_status_id = new_order_status_id
@@ -77,9 +82,7 @@ class OrderSerializer(serializers.ModelSerializer):
             instance.order_status_id
         ).data.get("order_status", None)
 
-        response["complaint"] = ComplaintSerializer(
-            instance.complaint_id
-        ).data
+        response["complaint"] = ComplaintSerializer(instance.complaint_id).data
 
         return response
 
@@ -88,6 +91,7 @@ class SegmentSerializer(serializers.ModelSerializer):
     class Meta:
         many = True
         model = Order
+
 
 # def update(self, instance, validated_data):
 #     """

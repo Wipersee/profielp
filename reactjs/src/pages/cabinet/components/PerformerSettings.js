@@ -1,18 +1,11 @@
-<<<<<<< HEAD
-import { Form, Input, Image, Select, Row, Col, Button, message } from "antd";
-=======
 import { Form, Input, Image, Select, Row, Col, Button, message, InputNumber } from "antd";
->>>>>>> dev
 import ImageUpload from "./../../../common/ImageUpload";
 import { useState } from "react";
 import ChangePasswordModal from "./ChangePasswordModal";
 import { useDispatch, useSelector } from "react-redux";
 import axiosInstance from "../../../common/axios";
 import { url } from "../../../common/url";
-<<<<<<< HEAD
-=======
 import { useEffect } from "react";
->>>>>>> dev
 const { Option } = Select;
 
 const formItemLayout = {
@@ -50,16 +43,12 @@ const tailFormItemLayout = {
 const PerformerSettings = () => {
   const data = useSelector((state) => state.userReducer)
   const dispatch = useDispatch()
-<<<<<<< HEAD
-
-=======
   const [specs, setSpecs] = useState([])
 
   useEffect(() => {
     axiosInstance.get('users/performerSpecializations').then(response => setSpecs(response.data)).catch(err => console.log(err))
   }, [])
 
->>>>>>> dev
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
   const onFinish = (values) => {
@@ -68,24 +57,15 @@ const PerformerSettings = () => {
       last_name: values.last_name,
       email: values.email,
       phone_number: values.phone_number,
-<<<<<<< HEAD
-      address: values.address
-=======
       description: values.description,
       avg_price_per_hour: values.avg_price_per_hour,
       performer_specialization_id: values.performer_specialization_id
->>>>>>> dev
     })
       .then(response => {
         dispatch({ type: "SET_USER", payload: { ...response.data, role: data.role, username: data.username, on_site: data.on_site } });
         localStorage.setItem('user', JSON.stringify({ ...response.data, role: data.role, username: data.username, on_site: data.on_site }));
         message.success("Data is update")
       })
-<<<<<<< HEAD
-      .catch(error => {
-        message.error(error)
-      });
-=======
       .catch(err => {
         var keys = Object.keys(err.response.data);
         const errors = []
@@ -95,7 +75,6 @@ const PerformerSettings = () => {
         message.error(errors.map(item => <span style={{ color: 'red' }}>{item[0]}<br /></span>))
       });
 
->>>>>>> dev
   };
 
   const prefixSelector = (
@@ -123,11 +102,7 @@ const PerformerSettings = () => {
             form={form}
             name="settings"
             onFinish={onFinish}
-<<<<<<< HEAD
-            initialValues={{ ...data, prefix: "38" }}
-=======
             initialValues={{ ...data, prefix: "38", performer_specialization_id: data.specialization.performer_specialization_id }}
->>>>>>> dev
             scrollToFirstError
             style={{ width: "100%" }}
           >
