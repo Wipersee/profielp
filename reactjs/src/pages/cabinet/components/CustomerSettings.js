@@ -58,8 +58,13 @@ const CustomerSettings = () => {
         localStorage.setItem('user', JSON.stringify({ ...response.data, role: data.role, username: data.username, on_site: data.on_site }));
         message.success("Data is update")
       })
-      .catch(error => {
-        message.error(error)
+      .catch(err => {
+        var keys = Object.keys(err.response.data);
+        const errors = []
+        keys.forEach(function (key) {
+          errors.push(err.response.data[key])
+        });
+        message.error(errors.map(item => <span style={{ color: 'red' }}>{item[0]}<br /></span>))
       });
   };
 

@@ -2,6 +2,7 @@ import { Form, Input, Card, Select, Row, Col, Checkbox, Button, Radio, message }
 import axiosInstance from "../../../common/axios";
 import { useHistory } from 'react-router-dom'
 import { formItemLayout, tailFormItemLayout, prefixSelector } from './layout'
+import { Link } from "react-router-dom";
 
 const CustomerFrom = () => {
     const [form] = Form.useForm();
@@ -143,7 +144,7 @@ const CustomerFrom = () => {
                 {...tailFormItemLayout}
             >
                 <Checkbox>
-                    I have read the <a href="">agreement</a>
+                    I have read the <Link to="agreement" target="_blank" rel="noopener noreferrer">Agreement</Link>
                 </Checkbox>
             </Form.Item>
             <Form.Item {...tailFormItemLayout}>

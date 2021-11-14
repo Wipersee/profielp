@@ -6,37 +6,31 @@ import { message } from "antd";
 import axiosInstance from "../../../common/axios";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchData } from "../../../common/fetchData";
-// function LocationMarker() {
-//   const [position, setPosition] = useState(null)
-//   const map = useMapEvents({
-//     click() {
-//       map.locate()
-//     },
-//     locationfound(e) {
-//       setPosition(e.latlng)
-//       map.flyTo(e.latlng, map.getZoom())
-//     },
-//   })
+import CustomMeMarker from './CustomMeMurker'
 
-//   return position === null ? null : (
-//     <Marker position={position}>
-//       <Popup>You are here</Popup>
-//     </Marker>
-//   )
-// }
-const data = [
-  {
-    id: 1,
-    pos: [50.450001, 30.523333],
-    text: "With over years of experience in offering plumbing service, boiler installation and repair services in and across London, PhoneAPlumber is proud to offer professional and reliable plumbing service in London. At PhoneAPlumber, we cover domestic as well as commercial plumbing services, gas boiler repairs, central heating and boiler installation at a cost-effective price. All our services are competitively priced, without any hidden charges or fees. Thus, offering you great value for money. We are also gas safe registered. Each repair we do, comes with a warranty of a year (12 months), giving you complete assurance. Our team of skilled gas engineers and plumbers are qualified to carry out all engineering and plumbing services. No matter what type of problem you have we are happy to assist you. Call us now to arrange a visit or request a quote.",
-  },
-];
+
+function LocationMarker() {
+  const [position, setPosition] = useState(null)
+  const map = useMapEvents({
+    locationfound(e) {
+      setPosition(e.latlng)
+      // map.flyTo(e.latlng, map.getZoom())
+    },
+  })
+  useEffect(() => map.locate(), [])
+  return position === null ? null : (
+    <CustomMeMarker position={position} />
+  )
+}
 
 const Map = () => {
   const dispatch = useDispatch()
   const [visible, setVisible] = useState(false);
-  const [performer, setPerformer] = useState({ id: '' })
+  const [performer, setPerformer] = useState({ id: '', specialization: {} })
   const { data } = useSelector((state) => state.performersReducer)
+
+
+
 
   useEffect(() => {
     // axiosInstance.get("users/performers").then(response => {
@@ -47,6 +41,7 @@ const Map = () => {
     dispatch(
       fetchData("/users/performers", "PERFORMERS")
     );
+
   }, [])
 
 
@@ -67,10 +62,11 @@ const Map = () => {
         )
       );
   };
-
+  const addMarker = (e) => {
+    console.log(e)
+  }
   return (
     <>
-      {" "}
       <MapContainer
         center={[50.450001, 30.523333]}
         zoom={13}
@@ -78,22 +74,24 @@ const Map = () => {
         scrollWheelZoom={true}
         style={{ height: "100vh", zIndex: "1" }}
         zoomControl={false}
-      // onclick={addMarker}
+        onclick={addMarker}
       >
         <TileLayer
           attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {data.length !== 0 ? data.map(({ id, username, latitude, longitude }) => (
+        {data.length !== 0 ? data.map(({ id, username, latitude, longitude, avatar }) => (
           <CustomMarker
             key={id}
             id={id}
             username={username}
             pos={[latitude, longitude]}
+            avatar={avatar}
             handleOrder={handleOrder}
             handleInfo={handleInfo}
           />
         )) : <></>}
+        <LocationMarker />
       </MapContainer>
       <CustomDrawer
         visible={visible}

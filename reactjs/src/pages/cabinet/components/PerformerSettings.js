@@ -1,10 +1,11 @@
-import { Form, Input, Image, Select, Row, Col, Button, message } from "antd";
+import { Form, Input, Image, Select, Row, Col, Button, message, InputNumber } from "antd";
 import ImageUpload from "./../../../common/ImageUpload";
 import { useState } from "react";
 import ChangePasswordModal from "./ChangePasswordModal";
 import { useDispatch, useSelector } from "react-redux";
 import axiosInstance from "../../../common/axios";
 import { url } from "../../../common/url";
+import { useEffect } from "react";
 const { Option } = Select;
 
 const formItemLayout = {
@@ -42,6 +43,11 @@ const tailFormItemLayout = {
 const PerformerSettings = () => {
   const data = useSelector((state) => state.userReducer)
   const dispatch = useDispatch()
+  const [specs, setSpecs] = useState([])
+
+  useEffect(() => {
+    axiosInstance.get('users/performerSpecializations').then(response => setSpecs(response.data)).catch(err => console.log(err))
+  }, [])
 
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
@@ -51,16 +57,24 @@ const PerformerSettings = () => {
       last_name: values.last_name,
       email: values.email,
       phone_number: values.phone_number,
-      address: values.address
+      description: values.description,
+      avg_price_per_hour: values.avg_price_per_hour,
+      performer_specialization_id: values.performer_specialization_id
     })
       .then(response => {
         dispatch({ type: "SET_USER", payload: { ...response.data, role: data.role, username: data.username, on_site: data.on_site } });
         localStorage.setItem('user', JSON.stringify({ ...response.data, role: data.role, username: data.username, on_site: data.on_site }));
         message.success("Data is update")
       })
-      .catch(error => {
-        message.error(error)
+      .catch(err => {
+        var keys = Object.keys(err.response.data);
+        const errors = []
+        keys.forEach(function (key) {
+          errors.push(err.response.data[key])
+        });
+        message.error(errors.map(item => <span style={{ color: 'red' }}>{item[0]}<br /></span>))
       });
+
   };
 
   const prefixSelector = (
@@ -88,7 +102,7 @@ const PerformerSettings = () => {
             form={form}
             name="settings"
             onFinish={onFinish}
-            initialValues={{ ...data, prefix: "38" }}
+            initialValues={{ ...data, prefix: "38", performer_specialization_id: data.specialization.performer_specialization_id }}
             scrollToFirstError
             style={{ width: "100%" }}
           >
@@ -150,17 +164,48 @@ const PerformerSettings = () => {
               />
             </Form.Item>
 
-            <Form.Item
-              name="address"
-              label="Address"
+            <Form.Item name="description"
+              label="Description"
               rules={[
                 {
                   required: true,
-                  message: "Please input your address!",
+                  message: "Please input your description!",
                 },
               ]}
             >
-              <Input />
+              <Input.TextArea rows={4} />
+            </Form.Item>
+            <Form.Item name="avg_price_per_hour"
+              label="Price per hour"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your price!",
+                },
+              ]}
+            >
+              <InputNumber
+                defaultValue={0}
+                formatter={value => `₴ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                // parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                style={{
+                  width: "100%",
+                }}
+              />
+            </Form.Item>
+            <Form.Item
+              name="performer_specialization_id"
+              label="Spezialization"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please select specialization!',
+                },
+              ]}
+            >
+              <Select placeholder="select your specialization">
+                {specs.map(item => <Option value={item.performer_specialization_id}>{item.performer_specialization}</Option>)}
+              </Select>
             </Form.Item>
             <Row justify={"center"}>
               <Col col={12}>
