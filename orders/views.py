@@ -1,10 +1,8 @@
-from django.shortcuts import render
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from .services.bl import get_order_status, get_all_orders_by_user_id
-from .services.generics import get, get_all, update, create, delete
+from .services.bl import get_order_status
 from . import serializers
 from orders.models import Order
 
@@ -23,20 +21,12 @@ class OrderStatusView(APIView):
         return Response(order_status_id)
 
 
-class OrderView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        """Get orders by filter"""
-        return Response(get_all_orders_by_user_id(request.user.id))
-
-
 class OrderDetailsView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
-        """Get order by UUID"""
-        return Response(get_all(request.user.id))
+    # def get(self, request):
+    #     """Get order by UUID"""
+    #     return Response(get_all(request.user.id))
 
     def post(self, request):
         """Create order"""

@@ -77,7 +77,7 @@ class User(AbstractUser):
         "Role", on_delete=models.DO_NOTHING, null=True
     )  # many to one relationship with the Role table
     phone_number = models.CharField(
-        max_length=31, help_text="User phone number", unique=True
+        max_length=31, help_text="User phone number"
     )  # TODO add regex (optional)
 
     avatar = models.ImageField(

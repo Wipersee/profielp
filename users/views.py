@@ -1,6 +1,8 @@
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+
+from orders.services.bl import get_all_orders_by_user_id
 from .services.bl import get_user
 from . import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -13,6 +15,7 @@ from django_filters import rest_framework as filters
 import io
 from PIL import Image
 import binascii
+
 
 # Create your views here.
 
@@ -118,3 +121,11 @@ class PerformerDetaildView(generics.RetrieveAPIView):
         pk = self.kwargs.get(self.lookup_url_kwarg)
         performer = Performer.objects.filter(id=pk)
         return performer
+
+
+class UsersOrdersView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, user_id):
+        """Get orders by user id (TODO add filters and checking try-except/if)"""
+        return Response(get_all_orders_by_user_id(user_id=user_id))

@@ -1,5 +1,5 @@
 from orders.models import OrderStatus
-from users.models import Role
+from users.models import User, Role
 
 
 def get_order_status(status: str) -> (OrderStatus, str):
@@ -15,11 +15,13 @@ def get_order_status(status: str) -> (OrderStatus, str):
     return order_status, error_message
 
 
-def get_user_role_by_id(role_id):
+def get_user_role_by_user_id(user_id):
     try:
-        role = Role.objects.get(role_id=role_id).role
+        # TODO use select_related
+        user_role_id = User.objects.get(user_id=id).role_ir
+        role = Role.objects.get(role_id=user_role_id).role
         error_message = None
-    # Role with this role id doesn't exist or some other exception, I don't want to handle them
+    # Role or user with the id doesn't exist or some other exception, I don't want to handle them
     except Exception as e:
         role = None
         error_message = e
@@ -27,8 +29,8 @@ def get_user_role_by_id(role_id):
 
 
 # TODO add status checking
-def get_all_orders_by_user_id(user_id: str, user_role_id: str) -> (OrderStatus, str):
-    user_role = get_user_role_by_id(user_role_id)
+def get_all_orders_by_user_id(user_id: str) -> (OrderStatus, str):
+    user_role = get_user_role_by_user_id(user_id)
     try:
         error_message = None
 

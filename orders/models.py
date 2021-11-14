@@ -80,8 +80,7 @@ class Order(models.Model):
     )
 
     order_status_id = models.ForeignKey(
-        "OrderStatus", on_delete=models.DO_NOTHING, related_name="+",
-        default=OrderStatus.objects.get(order_status="CRTD")
+        "OrderStatus", on_delete=models.DO_NOTHING, related_name="+"
     )
 
     complaint_id = models.OneToOneField(
