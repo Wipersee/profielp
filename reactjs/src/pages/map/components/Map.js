@@ -5,7 +5,7 @@ import CustomDrawer from "./CustomDrawer";
 import { message } from "antd";
 import axiosInstance from "../../../common/axios";
 import { useSelector, useDispatch } from "react-redux";
-
+import { fetchData } from "../../../common/fetchData";
 // function LocationMarker() {
 //   const [position, setPosition] = useState(null)
 //   const map = useMapEvents({
@@ -36,14 +36,17 @@ const Map = () => {
   const dispatch = useDispatch()
   const [visible, setVisible] = useState(false);
   const [performer, setPerformer] = useState({ id: '' })
-  const [performers, setPerformers] = useState([])
+  const { data } = useSelector((state) => state.performersReducer)
 
   useEffect(() => {
-    axiosInstance.get("users/performers").then(response => {
-      setPerformers(response.data)
-      dispatch({ action: 'SET_PERFORMERS', payload: response.data })
-      console.log(response.data)
-    }).catch(err => console.log(err))
+    // axiosInstance.get("users/performers").then(response => {
+    //   setPerformers(response.data)
+    //   dispatch({ action: 'SET_PERFORMERS', payload: response.data })
+    //   console.log(response.data)
+    // }).catch(err => console.log(err))
+    dispatch(
+      fetchData("/users/performers", "PERFORMERS")
+    );
   }, [])
 
 
@@ -81,8 +84,7 @@ const Map = () => {
           attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {console.log(performers.length)}
-        {performers.length !== 0 ? performers.map(({ id, username, latitude, longitude }) => (
+        {data.length !== 0 ? data.map(({ id, username, latitude, longitude }) => (
           <CustomMarker
             key={id}
             id={id}
