@@ -21,6 +21,27 @@ from rest_framework_simplejwt.views import (
 )
 from django.conf.urls.static import static
 from django.conf import settings
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+from rest_framework import permissions
+from django.views.generic import TemplateView
+from django.conf.urls import url
+
+schema_view = get_schema_view(  # new
+    openapi.Info(
+        title="Profielp API",
+        default_version="v1",
+        description="<p>API for app Profielp.</p>  <h4>In order to Authorize type: <b>Bearer YOUR_ACCESS_TOKEN</b></h4>",
+        terms_of_service="https://www.google.com/policies/terms/",
+        contact=openapi.Contact(url="https://github.com/Wipersee/profielp"),
+    ),
+    # patterns=[
+    #     path("api/users", include("users.urls")),
+    #     path("api/orders", include("orders.urls")),
+    # ],
+    public=True,
+    permission_classes=(permissions.AllowAny,),
+)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -29,4 +50,17 @@ urlpatterns = [
     path("api/orders/", include("orders.urls")),
     path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path(  # new
+        "swagger-ui/",
+        TemplateView.as_view(
+            template_name="swaggerui/swaggerui.html",
+            extra_context={"schema_url": "openapi-schema"},
+        ),
+        name="swagger-ui",
+    ),
+    url(  # new
+        r"^swagger(?P<format>\.json|\.yaml)$",
+        schema_view.without_ui(cache_timeout=0),
+        name="schema-json",
+    ),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
