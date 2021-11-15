@@ -34,7 +34,7 @@ class CustomerAdmin(UserAdmin):
             },
         ),
     )
-    readonly_fields = ("last_login", "date_joined")
+    readonly_fields = ("id", "last_login", "date_joined")
 
 
 class AdminAdmin(UserAdmin):

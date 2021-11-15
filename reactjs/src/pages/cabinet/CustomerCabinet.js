@@ -9,10 +9,12 @@ import {
   FileTextOutlined,
   RollbackOutlined,
   SettingOutlined,
+  FieldTimeOutlined
 } from "@ant-design/icons";
 import MyDataList from "./components/MyDataList";
 import MyOrdersList from "./components/MyOrdersList";
 import CustomerSettings from "./components/CustomerSettings";
+import ActiveDeal from "./components/ActiveDeal";
 
 const CustomerCabinet = ({ match }) => {
   const menuItems = (
@@ -23,15 +25,18 @@ const CustomerCabinet = ({ match }) => {
       <Menu.Item key="2" icon={<SendOutlined />}>
         <Link to={`${match.url}/my-orders`}>My orders</Link>
       </Menu.Item>
+      <Menu.Item key="3" icon={<FieldTimeOutlined />}>
+        <Link to={`${match.url}/active-deal`}>Active deal</Link>
+      </Menu.Item>
       {/* <Menu.Item key="3" icon={<LikeOutlined />}>
             <Link to={`${match.url}/my-likes`}>
                 My likes
             </Link>
         </Menu.Item> */}
-      <Menu.Item key="4" icon={<SettingOutlined />}>
+      <Menu.Item key="5" icon={<SettingOutlined />}>
         <Link to={`${match.url}/settings`}>Settings</Link>
       </Menu.Item>
-      <Menu.Item key="5" icon={<RollbackOutlined />}>
+      <Menu.Item key="6" icon={<RollbackOutlined />}>
         <Link to="/">Back to map</Link>
       </Menu.Item>
     </>
@@ -47,6 +52,9 @@ const CustomerCabinet = ({ match }) => {
       </Route>
       <Route path={`${match.url}/my-likes`}>
         <h1>My likes</h1>
+      </Route>
+      <Route path={`${match.url}/active-deal`}>
+        <ActiveDeal />
       </Route>
       <Route path={`${match.url}/settings`}>
         <CustomerSettings />

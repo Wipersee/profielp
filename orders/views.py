@@ -2,12 +2,21 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from .services.bl import get_order_status
+from .services.bl import get_order_status, filter_order_status
 from . import serializers
-from orders.models import Order
+
+from users.services.bl import get_performer_by_user_request
 
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from .models import OrderStatus
+from .models import OrderStatus, Order
+from profielp.common import OrderStatusesDict
+from rest_framework import generics
+
+
+class OrderStatusesList(generics.ListAPIView):
+    queryset = OrderStatus.objects.all()
+    serializer_class = serializers.OrderStatusSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class OrderStatusView(APIView):
@@ -70,3 +79,27 @@ class OrderDetailsView(APIView):
     def delete(self, request):
         """Delete order"""
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+class IncomingOrders(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        incoming_orders = Order.objects.filter(
+            performer_id=request.user.id,
+            order_status_id=filter_order_status(OrderStatusesDict.get("created")),
+        )
+        return Response(serializers.OrderSerializer(incoming_orders, many=True).data)
+
+
+class OrderCurrent(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        current_orders = Order.objects.filter(
+            performer_id=request.user.id,
+            order_status_id=filter_order_status(OrderStatusesDict.get("accepted")),
+        )
+        return Response(
+            serializers.OrderCustomerSerializer(current_orders, many=True).data
+        )

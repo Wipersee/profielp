@@ -12,9 +12,6 @@ from rest_framework import generics
 from .models import Customer, Performer, PerformerSpecialization
 from .services.filters import ProductFilter
 from django_filters import rest_framework as filters
-import io
-from PIL import Image
-import binascii
 
 # Create your views here.
 
@@ -128,3 +125,6 @@ class UsersOrdersView(APIView):
     def get(self, request, user_id):
         """Get orders by user id (TODO add filters and checking try-except/if)"""
         return Response(get_all_orders_by_user_id(user_id=user_id))
+
+
+

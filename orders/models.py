@@ -8,7 +8,8 @@ class OrderStatus(models.Model):
         ("ACCPTD", "Accepted"),
         ("INPRGRS", "In progress"),
         ("ADMN", "Complaint under consideration by the administrator"),
-        ("DONE", "Order is finished successfully")
+        ("DONE", "Order is finished successfully"),
+        ("DECLINED", "Order is declined by performer"),
     ]
 
     # Fields

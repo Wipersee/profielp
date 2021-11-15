@@ -1,5 +1,8 @@
 from rest_framework import serializers
 from orders.models import Order, Complaint, OrderStatus
+from profielp.common import OrderStatusesDict
+from users.models import Customer, Performer
+from users.serializers import CustomerSerializer
 
 # from users.serializers import CustomerSerializer, PerformerSerializer
 from orders.services.bl import get_order_status
@@ -8,7 +11,10 @@ from orders.services.bl import get_order_status
 class OrderStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderStatus
-        fields = ("order_status",)
+        fields = (
+            "order_status_id",
+            "order_status",
+        )
 
 
 class ComplaintSerializer(serializers.ModelSerializer):
@@ -25,10 +31,11 @@ class ComplaintSerializer(serializers.ModelSerializer):
         ]
 
 
-class OrderSerializer(serializers.ModelSerializer):
+class OrderCustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = [
+            "order_id",
             "customer_id",
             "performer_id",
             "complaint_id",
@@ -41,6 +48,34 @@ class OrderSerializer(serializers.ModelSerializer):
             "completion_date",
             "customer_approved",
             "performer_approved",
+        ]
+
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+
+        response["user"] = CustomerSerializer(instance.customer_id).data
+
+        return response
+
+
+class OrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = [
+            "order_id",
+            "customer_id",
+            "performer_id",
+            "complaint_id",
+            "address",
+            "latitude",
+            "longitude",
+            "comment",
+            "is_high_priority",
+            "date",
+            "completion_date",
+            "customer_approved",
+            "performer_approved",
+            "order_status_id",
         ]
 
     def create(self, validated_data):
@@ -71,6 +106,13 @@ class OrderSerializer(serializers.ModelSerializer):
 
             if new_order_status_id and old_order_status_id != new_order_status_id:
                 instance.order_status_id = new_order_status_id
+                if new_order_status_id.order_status == OrderStatusesDict.get(
+                    "accepted"
+                ):  # Handling logic of coordinates updating
+                    performer = instance.performer_id
+                    performer.longitude = instance.longitude
+                    performer.latitude = instance.latitude
+                    performer.save()
 
         instance.save()
         return instance

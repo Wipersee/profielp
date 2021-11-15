@@ -1,80 +1,41 @@
 import { Table, Tag, Space, Typography, message, Popconfirm } from "antd";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axiosInstance from "../../../common/axios";
 
 const { Text, Link } = Typography;
 
 const ListOfDeals = () => {
-  const [data, setData] = useState([
-    {
-      key: "1",
-      name: "John Brown",
-      price: 1000,
-      address: "New York No. 1 Lake Park",
-      phone: "0969024721",
-      comment: "Need a plumber",
-      priority: 0,
-    },
-    {
-      key: "2",
-      name: "Jim Green",
-      price: 500,
-      address: "London No. 1 Lake Park",
-      phone: "0969024721",
-      comment: "",
-      priority: 1,
-    },
-    {
-      key: "3",
-      name: "Joe Black",
-      price: 2900,
-      address: "Sidney No. 1 Lake Park",
-      phone: "0969028221",
-      comment: "...",
-      priority: 0,
-    },
-    {
-      key: "4",
-      name: "John Brown",
-      price: 4500,
-      address: "Kyiv, Chreshatik 1",
-      phone: "0969024721",
-      comment: "$$$",
-      priority: 1,
-    },
-  ]);
+  const [statuses, setStatuses] = useState(null)
+  const [data, setData] = useState()
+  useEffect(() => {
+    axiosInstance.get('orders/incoming').then(response => setData(response.data)).catch(err => console.log(err))
+    axiosInstance.get('orders/statuses').then(response => setStatuses(response.data)).catch(err => console.log(err))
+  }, [])
+
   const handleDelete = (key) => {
     const dataSource = [...data];
-    setData(dataSource.filter((item) => item.key !== key));
+    setData(dataSource.filter((item) => item.order_id !== key));
   };
   const handleAccept = (id) => {
-    //TODO: need to make redirect to active orders
-    message.success("Success, please phone to customer");
+    const accepted = statuses.find(x => x.order_status === 'ACCPTD').order_status_id;
+    axiosInstance.patch(`orders/${id}`, { order_status_id: accepted }).then(response => {
+      handleDelete(id);
+      message.success("Success, go to active deal");
+    }).catch(err => console.log(err))
   };
   const handleDecline = (id) => {
-    handleDelete(id);
-    message.success("Successfully deleted");
+    const declined = statuses.find(x => x.order_status === 'DECLINED').order_status_id;
+    axiosInstance.patch(`orders/${id}`, { order_status_id: declined }).then(response => {
+      handleDelete(id);
+      message.success("Successfully declined");
+    }).catch(err => console.log(err))
+
   };
 
   const columns = [
     {
-      title: "Name",
-      dataIndex: "name",
-      sorter: (a, b) => a.name.length - b.name.length,
-      sortDirections: ["descend"],
-    },
-    {
-      title: "Price",
-      dataIndex: "price",
-      defaultSortOrder: "descend",
-      sorter: (a, b) => a.price - b.price,
-    },
-    {
       title: "Address",
       dataIndex: "address",
-    },
-    {
-      title: "Phone",
-      dataIndex: "phone",
     },
     {
       title: "Comment",
@@ -82,10 +43,10 @@ const ListOfDeals = () => {
     },
     {
       title: "Priority",
-      dataIndex: "priority",
-      render: (priority) => (
-        <Tag color={priority === 0 ? "green" : "volcano"} key={priority}>
-          {priority === 0 ? "LOW" : "HIGH"}
+      dataIndex: "is_high_priority",
+      render: (is_high_priority) => (
+        <Tag color={is_high_priority === false ? "green" : "volcano"} key={is_high_priority}>
+          {is_high_priority === false ? "LOW" : "HIGH"}
         </Tag>
       ),
       filters: [
@@ -110,7 +71,7 @@ const ListOfDeals = () => {
         <Space size="middle">
           <Text
             type="success"
-            onClick={() => handleAccept(record.key)}
+            onClick={() => handleAccept(record.order_id)}
             className="list-of-deals-accept-text"
           >
             Accept
@@ -118,7 +79,7 @@ const ListOfDeals = () => {
           {data.length >= 1 ? (
             <Popconfirm
               title="Sure to decline?"
-              onConfirm={() => handleDecline(record.key)}
+              onConfirm={() => handleDecline(record.order_id)}
             >
               <Text type="danger" className="list-of-deals-decline-text">
                 Decline

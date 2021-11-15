@@ -1,5 +1,9 @@
-from orders.models import OrderStatus
+from orders.models import OrderStatus, Order
 from users.models import User, Role
+
+
+def filter_order_status(status):
+    return OrderStatus.objects.get(order_status=status)
 
 
 def get_order_status(status: str) -> (OrderStatus, str):
@@ -29,15 +33,21 @@ def get_user_role_by_user_id(user_id):
 
 
 # TODO add status checking
-def get_all_orders_by_user_id(user_id: str) -> (OrderStatus, str):
+def get_all_orders_by_user_id(user_id: str) -> (Order, str):
     user_role = get_user_role_by_user_id(user_id)
     try:
         error_message = None
 
         if user_role == "CUST":
-            orders = OrderStatus.objects.filter(customer_id=user_id)
+            orders = Order.objects.filter(
+                customer_id=user_id,
+                order_status_id=OrderStatus.objects.get(order_status="DONE"),
+            )
         elif user_role == "PERF":
-            orders = OrderStatus.objects.filter(performer_id=user_id)
+            orders = Order.objects.filter(
+                performer_id=user_id,
+                order_status_id=OrderStatus.objects.get(order_status="DONE"),
+            )
         else:
             orders = []
             error_message = f"Don't know what to do with the user role {user_role}"

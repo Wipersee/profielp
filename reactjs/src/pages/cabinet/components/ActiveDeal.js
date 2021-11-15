@@ -1,28 +1,26 @@
 import { Table, Empty } from "antd";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import axiosInstance from "../../../common/axios";
 
 const ActiveDeal = () => {
-  const [data, setData] = useState([
-    {
-      key: "1",
-      name: "John Brown",
-      price: 1000,
-      address: "New York No. 1 Lake Park",
-      phone: "0969024721",
-      comment: "Need a plumber",
-      priority: 0,
-    },
-  ]);
+  const [data, setData] = useState([]);
+
+  const getCoordinates = (data) => {
+    if (data.length > 0) {
+      return [data[0].latitude, data[0].longitude]
+    }
+    return [0, 0]
+  }
+
+  useEffect(() => {
+    axiosInstance.get('orders/current').then(response => setData(response.data)).catch(err => console.log(err))
+  }, [])
 
   const columns = [
     {
-      title: "Name",
-      dataIndex: "name",
-    },
-    {
-      title: "Price",
-      dataIndex: "price",
+      title: "Username",
+      dataIndex: ["user", 'username'],
     },
     {
       title: "Address",
@@ -30,7 +28,11 @@ const ActiveDeal = () => {
     },
     {
       title: "Phone",
-      dataIndex: "phone",
+      dataIndex: ["user", 'phone_number'],
+    },
+    {
+      title: "Email",
+      dataIndex: ["user", 'email'],
     },
     {
       title: "Comment",
@@ -54,7 +56,7 @@ const ActiveDeal = () => {
               attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <Marker position={[50.450001, 30.523333]}></Marker>
+            <Marker position={getCoordinates(data)}></Marker>
           </MapContainer>
         </>
       ) : (

@@ -29,3 +29,7 @@ def get_serializer_table(user: dict) -> tuple:
 def get_user(user: dict) -> dict:
     entity = get_serializer_table(user)
     return entity[1](entity[0].objects.get(id=user.id)).data
+
+
+def get_performer_by_user_request(user_id):
+    return Performer.objects.get(id=user_id)
