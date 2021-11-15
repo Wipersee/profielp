@@ -1,4 +1,3 @@
-from django.contrib import admin
 from django.urls import path
 from . import views
 
@@ -16,4 +15,5 @@ urlpatterns = [
     path("performerSpecializations", views.PerformerSpecializationsView.as_view()),
     path("performers", views.PerformersView.as_view()),
     path("performers/<uuid:pk>", views.PerformerDetaildView.as_view()),
+    path("<uuid:user_id>/orders", views.UsersOrdersView.as_view()),
 ]

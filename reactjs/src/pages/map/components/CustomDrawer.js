@@ -51,7 +51,6 @@ const DescriptionItem = ({ title, content }) => (
 
 const CustomDrawer = (props) => {
   const { performer } = props;
-  console.log(props)
   return (
     <Drawer
       title={`Info about master ${performer.username}`}

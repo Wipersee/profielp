@@ -17,7 +17,7 @@ const CustomMarker = (props) => {
             actions={[
               <Popover
                 placement="leftBottom"
-                title={"Comment to order"}
+                title={"Order"}
                 content={
                   <CommentInput handleOrder={props.handleOrder} id={props.id} />
                 }
