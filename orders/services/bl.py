@@ -1,5 +1,7 @@
-from orders.models import OrderStatus, Order
-from users.models import User, Role
+from django.db.models import Count
+
+from orders.models import OrderStatus, Order, Complaint
+from users.models import User, Role, Admin
 
 
 def filter_order_status(status):
@@ -57,3 +59,20 @@ def get_all_orders_by_user_id(user_id: str) -> (Order, str):
         error_message = e
 
     return orders, error_message
+
+
+def get_free_admin():
+    admin = (Complaint.objects
+             .filter(resolved=False)
+             .values('admin_id')
+             .annotate(dcount=Count('complaint_id'))
+             .order_by('dcount')
+             .first()
+             )
+    if admin is not None:
+        admin_id = admin.get("admin_id", None)
+
+    if admin_id is None:
+        admin_id = Admin.objects.first().id
+
+    return admin_id
