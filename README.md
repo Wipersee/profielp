@@ -41,6 +41,6 @@ To add or edit database table model:
 3. run `python manage.py makemigrations`
 4. run `python manage.py migrate`
 
-
 # Create superuser
+
 1. run `python manage.py createsuperuser`
