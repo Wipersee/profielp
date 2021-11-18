@@ -20,7 +20,17 @@ class Role(models.Model):
 
 class PerformerSpecialization(models.Model):
     # TODO add more specializations
-    performer_specializations = [("PL", "plumber"), ("EL", "electrician")]
+    performer_specializations = [
+        ("Plumber", "Plumber"),
+        ("Electrician", "Electrician"),
+        ("Caretaker", "Caretaker"),
+        ("Carpenter", "Carpenter"),
+        ("Cobbler", "Cobbler"),
+        ("Gardener", "Gardener"),
+        ("Mechanic", "Mechanic"),
+        ("Roofer", "Roofer"),
+        ("Tiler", "Tiler"),
+    ]
 
     # Fields
     performer_specialization_id = models.UUIDField(

@@ -2,14 +2,25 @@ import { Form, Input, InputNumber, Checkbox, Button, Select, message } from "ant
 import axiosInstance from "../../../common/axios";
 import { useHistory } from 'react-router-dom'
 import { formItemLayout, tailFormItemLayout, prefixSelector } from './layout'
+import { useEffect, useState } from "react";
 
 const { Option } = Select;
 
 const PerformerForm = (props) => {
+    var options = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+    };
+    const [crd, setCrd] = useState()
     const [form] = Form.useForm();
     const history = useHistory()
+    useEffect(() => { navigator.geolocation.getCurrentPosition((v) => setCrd(v.coords), (r) => console.log(r), options); }, [])
+
+
 
     const onFinish = (values) => {
+
         axiosInstance.post('users/registration/performer', {
             username: values.username,
             password: values.password,
@@ -17,6 +28,8 @@ const PerformerForm = (props) => {
             email: values.email,
             avg_price_per_hour: values.avg_price_per_hour,
             performer_specialization_id: values.performer_specialization_id,
+            latitude: crd.latitude,
+            longitude: crd.longitude,
         }).then(res => {
             message.success("User created, please login")
             history.push('/login')

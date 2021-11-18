@@ -1,10 +1,12 @@
-import { Table, Empty } from "antd";
+import { Table, Empty, Typography, Drawer, Form, Input, Button } from "antd";
 import { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import axiosInstance from "../../../common/axios";
 
+
 const ActiveDeal = () => {
   const [data, setData] = useState([]);
+  const [visible, setVisibe] = useState(false)
 
   const getCoordinates = (data) => {
     if (data.length > 0) {
@@ -38,7 +40,22 @@ const ActiveDeal = () => {
       title: "Comment",
       dataIndex: "comment",
     },
+    {
+      title: "Complaint",
+      key: "complaint",
+      render: (
+        text,
+        record //TODO: write onClick actions, API REQUEST to server
+      ) => (
+        <Typography.Text type="danger" onClick={() => setVisibe(true)} >
+          Complaint
+        </Typography.Text>
+      ),
+    },
   ];
+  const onFinish = (val) => {
+    console.log(val)
+  }
 
   return (
     <div>
@@ -62,6 +79,28 @@ const ActiveDeal = () => {
       ) : (
         <Empty description="No active deals, go to list of deals and choose one" />
       )}
+      <Drawer
+        title="Compaint on this user"
+        width={320}
+        onClose={() => setVisibe(false)}
+        visible={visible}
+        bodyStyle={{ paddingBottom: 80 }}
+      >
+        <Form layout="vertical" hideRequiredMark onFinish={onFinish}>
+          <Form.Item
+            name="comment"
+            label="Comment"
+            rules={[{ required: true, message: 'Please enter short comment' }]}
+          >
+            <Input.TextArea showCount maxLength={400} placeholder="Please enter short comment" />
+          </Form.Item>
+          <Form.Item >
+            <Button htmlType="submit">
+              Complaint
+            </Button>
+          </Form.Item>
+        </Form>
+      </Drawer>
     </div>
   );
 };

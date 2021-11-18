@@ -193,9 +193,12 @@ class PerformerRegistrationSerializer(serializers.ModelSerializer):
             "phone_number",
             "avg_price_per_hour",
             "performer_specialization_id",
+            "latitude",
+            "longitude",
         )
 
     def create(self, validated_data):
+        print(validated_data)
         password = validated_data.pop("password")
         performer_specialization_id = validated_data.pop("performer_specialization_id")
         user = Performer(

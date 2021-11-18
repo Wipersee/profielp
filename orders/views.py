@@ -2,6 +2,8 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
+from users.models import Role
+
 from .services.bl import get_order_status, filter_order_status
 from . import serializers
 
@@ -9,7 +11,7 @@ from users.services.bl import get_performer_by_user_request
 
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .models import OrderStatus, Order
-from profielp.common import OrderStatusesDict
+from profielp.common import OrderStatusesDict, RolesDict
 from rest_framework import generics
 
 
@@ -96,10 +98,16 @@ class OrderCurrent(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        current_orders = Order.objects.filter(
-            performer_id=request.user.id,
-            order_status_id=filter_order_status(OrderStatusesDict.get("accepted")),
-        )
+        if request.user.role_id.role == RolesDict.get("performer"):
+            current_orders = Order.objects.filter(
+                performer_id=request.user.id,
+                order_status_id=filter_order_status(OrderStatusesDict.get("accepted")),
+            )
+        elif request.user.role_id.role == RolesDict.get("customer"):
+            current_orders = Order.objects.filter(
+                customer_id=request.user.id,
+                order_status_id=filter_order_status(OrderStatusesDict.get("accepted")),
+            )
         return Response(
             serializers.OrderCustomerSerializer(current_orders, many=True).data
         )

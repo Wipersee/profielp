@@ -7,7 +7,7 @@
 # Back-end
 
 For backend part need to have python and env with installed packages from requirements.txt file
-
+In order to setup db, please run following command in root project directory: `python manage.py loaddata intialdata.json`
 
 -----
 

@@ -89,7 +89,7 @@ class PerformerRegistration(generics.CreateAPIView):
 class PerformerSpecializationsView(generics.ListAPIView):
     queryset = PerformerSpecialization.objects.all()
     serializer_class = serializers.PerformerSpecializationSerializer
-    permission_classes = (AllowAny,)
+    permission_classes = [AllowAny]
     authentication_classes = ()
 
 
@@ -98,8 +98,7 @@ class PerformersView(generics.ListAPIView):
     serializer_class = serializers.PerformerShortSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = ProductFilter
-    permission_classes = (AllowAny,)
-    authentication_classes = ()
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         queryset = Performer.objects.filter(
@@ -110,7 +109,7 @@ class PerformersView(generics.ListAPIView):
 
 class PerformerDetaildView(generics.RetrieveAPIView):
     serializer_class = serializers.PerformerSerializer
-    permission_classes = (AllowAny,)
+    permission_classes = [IsAuthenticated]
     lookup_url_kwarg = "pk"
 
     def get_queryset(self):
@@ -125,6 +124,3 @@ class UsersOrdersView(APIView):
     def get(self, request, user_id):
         """Get orders by user id (TODO add filters and checking try-except/if)"""
         return Response(get_all_orders_by_user_id(user_id=user_id))
-
-
-

@@ -5,3 +5,9 @@ OrderStatusesDict = {
     "admin": "ADMN",
     "adone": "DONE",
 }
+
+RolesDict ={
+    'performer':"PERF",
+    'customer':"CUST",
+    'admin':"ADMN"
+}
