@@ -1,33 +1,43 @@
-version: "3.8"
+version: '3.8'
+
 services:
-  db:
-    container_name: postgres_container
-    image: postgres
+  postgres:
+    container_name: postgres
+    hostname: postgres
+    image: postgres:14.1-alpine
     environment:
-      - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - PGDATA=/data/postgres
-    volumes:
-      - postgres:/data/postgres
+      - POSTGRES_DB=profielb_db
+    networks:
+      - main
     ports:
       - "5432:5432"
-  pgadmin:
-    image: dpage/pgadmin4
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=admin@kpi.ua
-      - PGADMIN_DEFAULT_PASSWORD=admin
-    ports:
-      - "8081:80"
+    restart: on-failure
+    volumes:
+      - postgresql-data:/var/lib/postgresql/data
+
   app:
     build: .
     env_file:
-      - .env
-    command: sh -c "python3 main.py"
-    container_name: python_app
+      - ./.dev.env #rewrite to prod.env
+    command: sh -c "wait-for postgres:5432 && python manage.py collectstatic --no-input && python manage.py migrate && gunicorn --workers=2 --timeout 400 dashboard.wsgi -b 0.0.0.0:8000"
+    container_name: app
     depends_on:
-      - db
+      - postgres
+    expose:
+      - "8000"
+    ports:
+      - "8000:8000"
+    hostname: app
     image: app-image
+    networks:
+      - main
+    restart: on-failure
+
+networks:
+  main:
+    driver: bridge
+
 volumes:
-  postgres:
-  pgadmin:
+  postgresql-data:
