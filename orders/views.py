@@ -99,13 +99,17 @@ class OrderCurrent(APIView):
 
                 current_orders = Order.objects.filter(
                     performer_id=request.user.id,
-                    order_status_id=filter_order_status(OrderStatusesDict.get("accepted")),
+                    order_status_id=filter_order_status(
+                        OrderStatusesDict.get("accepted")
+                    ),
                 )
             elif request.user.role_id.role == RolesDict.get("customer"):
 
                 current_orders = Order.objects.filter(
                     customer_id=request.user.id,
-                    order_status_id=filter_order_status(OrderStatusesDict.get("accepted")),
+                    order_status_id=filter_order_status(
+                        OrderStatusesDict.get("accepted")
+                    ),
                 )
             return Response(
                 serializers.OrderCustomerSerializer(current_orders, many=True).data
@@ -119,24 +123,28 @@ class OrderList(APIView):
 
     def get(self, request):
         try:
-            print(request.user.role_id)
             if request.user.role_id.role == RolesDict.get("performer"):
                 current_orders = Order.objects.filter(
                     performer_id=request.user.id,
                     order_status_id=filter_order_status(OrderStatusesDict.get("done")),
                 ) | Order.objects.filter(
                     performer_id=request.user.id,
-                    order_status_id=filter_order_status(OrderStatusesDict.get("declined")),
+                    order_status_id=filter_order_status(
+                        OrderStatusesDict.get("declined")
+                    ),
                 )
 
             elif request.user.role_id.role == RolesDict.get("customer"):
                 current_orders = Order.objects.filter(
-                    performer_id=request.user.id,
+                    customer_id=request.user.id,
                     order_status_id=filter_order_status(OrderStatusesDict.get("done")),
                 ) | Order.objects.filter(
-                    performer_id=request.user.id,
-                    order_status_id=filter_order_status(OrderStatusesDict.get("declined")),
+                    customer_id=request.user.id,
+                    order_status_id=filter_order_status(
+                        OrderStatusesDict.get("declined")
+                    ),
                 )
+
             return Response(
                 serializers.OrderCustomerSerializer(current_orders, many=True).data
             )
