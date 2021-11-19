@@ -1,10 +1,8 @@
 from rest_framework import serializers
 from orders.models import Order, Complaint, OrderStatus
 from profielp.common import OrderStatusesDict
-from users.models import Customer, Performer
 from users.serializers import CustomerSerializer
 
-# from users.serializers import CustomerSerializer, PerformerSerializer
 from orders.services.bl import get_order_status
 
 
@@ -21,6 +19,7 @@ class ComplaintSerializer(serializers.ModelSerializer):
     class Meta:
         model = Complaint
         fields = [
+            "complaint_id",
             "admin_id",
             "requester_id",
             "comment",
@@ -29,6 +28,13 @@ class ComplaintSerializer(serializers.ModelSerializer):
             "resolve_date",
             "resolved",
         ]
+
+    def create(self, validated_data):
+        complaint = Complaint(
+            **validated_data
+        )
+        complaint.save()
+        return complaint
 
 
 class OrderCustomerSerializer(serializers.ModelSerializer):
@@ -74,8 +80,7 @@ class OrderSerializer(serializers.ModelSerializer):
             "date",
             "completion_date",
             "customer_approved",
-            "performer_approved",
-            "order_status_id",
+            "performer_approved"
         ]
 
     def create(self, validated_data):
@@ -107,7 +112,7 @@ class OrderSerializer(serializers.ModelSerializer):
             if new_order_status_id and old_order_status_id != new_order_status_id:
                 instance.order_status_id = new_order_status_id
                 if new_order_status_id.order_status == OrderStatusesDict.get(
-                    "accepted"
+                        "accepted"
                 ):  # Handling logic of coordinates updating
                     performer = instance.performer_id
                     performer.longitude = instance.longitude
@@ -120,9 +125,11 @@ class OrderSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         response = super().to_representation(instance)
 
-        response["order_status"] = OrderStatusSerializer(
-            instance.order_status_id
-        ).data.get("order_status", None)
+        # I have no idea why it works (.order_status_id.order_status) but it works and I don't care
+        order_status_id = Order.objects.get(order_id=instance.order_id).order_status_id.order_status
+        order_status = Order.objects.get(order_id=instance.order_id).order_status_id.order_status
+        response["order_status_id"] = order_status_id
+        response["order_status"] = order_status
 
         response["complaint"] = ComplaintSerializer(instance.complaint_id).data
 
@@ -133,7 +140,6 @@ class SegmentSerializer(serializers.ModelSerializer):
     class Meta:
         many = True
         model = Order
-
 
 # def update(self, instance, validated_data):
 #     """

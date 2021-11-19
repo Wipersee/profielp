@@ -8,7 +8,7 @@ class Role(models.Model):
 
     # Fields
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    role = models.CharField(max_length=16, choices=roles, help_text="User role")
+    role = models.CharField(max_length=16, choices=roles, unique=True, help_text="User role")
 
     # Methods
     def __str__(self):
@@ -38,6 +38,7 @@ class PerformerSpecialization(models.Model):
     )
     performer_specialization = models.CharField(
         max_length=16,
+        unique=True,
         choices=performer_specializations,
         help_text="Performer specializations",
     )
@@ -95,7 +96,6 @@ class User(AbstractUser):
         upload_to="avatars",
         null=True,
     )
-    # avatar = models.URLField(help_text="Link for the storage with the image for the avatar (s3 path ?)")
 
     # Methods
     def get_something_for_example(self):

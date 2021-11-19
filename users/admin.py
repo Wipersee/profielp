@@ -1,7 +1,6 @@
 from django.contrib import admin
 from .models import *
 from django.contrib.auth.admin import UserAdmin
-from rest_framework_simplejwt import token_blacklist
 
 
 # admin.site.register(token_blacklist.models.BlacklistedToken)
@@ -13,6 +12,7 @@ class CustomerAdmin(UserAdmin):
             "User info",
             {
                 "fields": (
+                    "id",
                     "username",
                     "first_name",
                     "last_name",
@@ -43,6 +43,7 @@ class AdminAdmin(UserAdmin):
             "User info",
             {
                 "fields": (
+                    "id",
                     "username",
                     "first_name",
                     "last_name",
@@ -60,7 +61,7 @@ class AdminAdmin(UserAdmin):
             },
         ),
     )
-    readonly_fields = ("last_login", "date_joined")
+    readonly_fields = ("id", "last_login", "date_joined")
 
 
 class PerformerAdmin(UserAdmin):
@@ -69,6 +70,7 @@ class PerformerAdmin(UserAdmin):
             "User info",
             {
                 "fields": (
+                    "id",
                     "username",
                     "first_name",
                     "last_name",
@@ -103,7 +105,7 @@ class PerformerAdmin(UserAdmin):
             },
         ),
     )
-    readonly_fields = ("last_login", "date_joined")
+    readonly_fields = ("id", "last_login", "date_joined")
 
 
 admin.site.register(Role)
