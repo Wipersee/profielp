@@ -3,7 +3,8 @@ OrderStatusesDict = {
     "accepted": "ACCPTD",
     "in_progress": "INPRGRS",
     "admin": "ADMN",
-    "adone": "DONE",
+    "done": "DONE",
+    "declined": "DECLINED"
 }
 
 RolesDict ={

@@ -7,7 +7,18 @@ import { useSelector } from "react-redux";
 const ActiveDeal = () => {
   const [data, setData] = useState([]);
   const [visible, setVisibe] = useState(false)
-  const { id } = useSelector((state) => state.userReducer);
+  const { id, role } = useSelector((state) => state.userReducer);
+
+  const handleApprove = () => {
+    let request_body = {}
+    if (role === "CUST") {
+      request_body["customer_approved"] = true;
+    }
+    else {
+      request_body["performer_approved"] = true;
+    }
+    axiosInstance.patch(`orders/${data[0].order_id}`, request_body).then(response => console.log(response)).catch(err => console.log(err))
+  }
 
   const getCoordinates = (data) => {
     if (data.length > 0) {
@@ -46,10 +57,22 @@ const ActiveDeal = () => {
       key: "complaint",
       render: (
         text,
-        record //TODO: write onClick actions, API REQUEST to server
+        record
       ) => (
         <Typography.Text type="danger" onClick={() => setVisibe(true)} >
           Complaint
+        </Typography.Text>
+      ),
+    },
+    {
+      title: "Approve",
+      key: "approve",
+      render: (
+        text,
+        record
+      ) => (
+        <Typography.Text type="success" onClick={handleApprove} >
+          Approve
         </Typography.Text>
       ),
     },
