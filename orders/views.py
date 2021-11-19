@@ -94,19 +94,54 @@ class OrderCurrent(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        if request.user.role_id.role == RolesDict.get("performer"):
-            current_orders = Order.objects.filter(
-                performer_id=request.user.id,
-                order_status_id=filter_order_status(OrderStatusesDict.get("accepted")),
+        try:
+            if request.user.role_id.role == RolesDict.get("performer"):
+
+                current_orders = Order.objects.filter(
+                    performer_id=request.user.id,
+                    order_status_id=filter_order_status(OrderStatusesDict.get("accepted")),
+                )
+            elif request.user.role_id.role == RolesDict.get("customer"):
+
+                current_orders = Order.objects.filter(
+                    customer_id=request.user.id,
+                    order_status_id=filter_order_status(OrderStatusesDict.get("accepted")),
+                )
+            return Response(
+                serializers.OrderCustomerSerializer(current_orders, many=True).data
             )
-        elif request.user.role_id.role == RolesDict.get("customer"):
-            current_orders = Order.objects.filter(
-                customer_id=request.user.id,
-                order_status_id=filter_order_status(OrderStatusesDict.get("accepted")),
+        except Exception as e:
+            return Response([str(e)], status=status.HTTP_400_BAD_REQUEST)
+
+
+class OrderList(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        try:
+            print(request.user.role_id)
+            if request.user.role_id.role == RolesDict.get("performer"):
+                current_orders = Order.objects.filter(
+                    performer_id=request.user.id,
+                    order_status_id=filter_order_status(OrderStatusesDict.get("done")),
+                ) | Order.objects.filter(
+                    performer_id=request.user.id,
+                    order_status_id=filter_order_status(OrderStatusesDict.get("declined")),
+                )
+
+            elif request.user.role_id.role == RolesDict.get("customer"):
+                current_orders = Order.objects.filter(
+                    performer_id=request.user.id,
+                    order_status_id=filter_order_status(OrderStatusesDict.get("done")),
+                ) | Order.objects.filter(
+                    performer_id=request.user.id,
+                    order_status_id=filter_order_status(OrderStatusesDict.get("declined")),
+                )
+            return Response(
+                serializers.OrderCustomerSerializer(current_orders, many=True).data
             )
-        return Response(
-            serializers.OrderCustomerSerializer(current_orders, many=True).data
-        )
+        except Exception as e:
+            return Response([str(e)], status=status.HTTP_400_BAD_REQUEST)
 
 
 class ComplaintView(APIView):
