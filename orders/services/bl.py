@@ -62,13 +62,14 @@ def get_all_orders_by_user_id(user_id: str) -> (Order, str):
 
 
 def get_free_admin():
-    admin = (Complaint.objects
-             .filter(resolved=False)
-             .values('admin_id')
-             .annotate(dcount=Count('complaint_id'))
-             .order_by('dcount')
-             .first()
-             )
+    admin = (
+        Complaint.objects.filter(resolved=False)
+        .values("admin_id")
+        .annotate(dcount=Count("complaint_id"))
+        .order_by("dcount")
+        .first()
+    )
+    admin_id = None
     if admin is not None:
         admin_id = admin.get("admin_id", None)
 

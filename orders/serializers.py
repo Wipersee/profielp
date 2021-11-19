@@ -30,9 +30,7 @@ class ComplaintSerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
-        complaint = Complaint(
-            **validated_data
-        )
+        complaint = Complaint(**validated_data)
         complaint.save()
         return complaint
 
@@ -80,13 +78,13 @@ class OrderSerializer(serializers.ModelSerializer):
             "date",
             "completion_date",
             "customer_approved",
-            "performer_approved"
+            "performer_approved",
+            "order_status_id",
         ]
 
     def create(self, validated_data):
         order = Order(
             **validated_data,
-            order_status_id=OrderStatus.objects.get(order_status="CRTD")
         )
         order.save()
         return order
@@ -112,7 +110,7 @@ class OrderSerializer(serializers.ModelSerializer):
             if new_order_status_id and old_order_status_id != new_order_status_id:
                 instance.order_status_id = new_order_status_id
                 if new_order_status_id.order_status == OrderStatusesDict.get(
-                        "accepted"
+                    "accepted"
                 ):  # Handling logic of coordinates updating
                     performer = instance.performer_id
                     performer.longitude = instance.longitude
@@ -126,8 +124,12 @@ class OrderSerializer(serializers.ModelSerializer):
         response = super().to_representation(instance)
 
         # I have no idea why it works (.order_status_id.order_status) but it works and I don't care
-        order_status_id = Order.objects.get(order_id=instance.order_id).order_status_id.order_status
-        order_status = Order.objects.get(order_id=instance.order_id).order_status_id.order_status
+        order_status_id = Order.objects.get(
+            order_id=instance.order_id
+        ).order_status_id.order_status
+        order_status = Order.objects.get(
+            order_id=instance.order_id
+        ).order_status_id.order_status
         response["order_status_id"] = order_status_id
         response["order_status"] = order_status
 
@@ -140,6 +142,7 @@ class SegmentSerializer(serializers.ModelSerializer):
     class Meta:
         many = True
         model = Order
+
 
 # def update(self, instance, validated_data):
 #     """

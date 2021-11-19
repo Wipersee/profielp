@@ -2,11 +2,12 @@ import { Table, Empty, Typography, Drawer, Form, Input, Button } from "antd";
 import { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import axiosInstance from "../../../common/axios";
-
+import { useSelector } from "react-redux";
 
 const ActiveDeal = () => {
   const [data, setData] = useState([]);
   const [visible, setVisibe] = useState(false)
+  const { id } = useSelector((state) => state.userReducer);
 
   const getCoordinates = (data) => {
     if (data.length > 0) {
@@ -54,7 +55,11 @@ const ActiveDeal = () => {
     },
   ];
   const onFinish = (val) => {
-    console.log(val)
+    axiosInstance.post('orders/complaint', {
+      comment: val.comment,
+      requester_id: id,
+      order_id: data[0].order_id,
+    }).then(response => console.log(response)).catch(err => console.log(err))
   }
 
   return (

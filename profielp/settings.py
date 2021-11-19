@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "users.apps.UsersConfig",
     "orders.apps.OrdersConfig",
+    "admin_pannel.apps.AdminPannelConfig",
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
     "django_filters",

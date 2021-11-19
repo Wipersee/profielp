@@ -36,16 +36,19 @@ class OrderDetailsView(APIView):
 
     def post(self, request):
         """Create order"""
+        crt_id = OrderStatus.objects.get(order_status="CRTD")
         orders = Order.objects.filter(
             customer_id=request.data["customer_id"],
             performer_id=request.data["performer_id"],
-            order_status_id=OrderStatus.objects.get(order_status="CRTD"),
+            order_status_id=crt_id,
         )
         if len(orders) > 0:  # Checks for orders in db
             return Response(
                 ["Order is already created"], status=status.HTTP_400_BAD_REQUEST
             )
-
+        request.data.update(
+            order_status_id=crt_id.order_status_id
+        )  # because order_status_id is not in request.data, but serializer need it
         created_order_serializer = serializers.OrderSerializer(data=request.data)
 
         if created_order_serializer.is_valid():
@@ -120,15 +123,18 @@ class ComplaintView(APIView):
         order = Order.objects.get(order_id=order_id)
         if order is None:
             return Response(
-                [f"No order with such uuid {order_id}"], status=status.HTTP_404_NOT_FOUND
+                [f"No order with such uuid {order_id}"],
+                status=status.HTTP_404_NOT_FOUND,
             )
 
         request.data["admin_id"] = get_free_admin()
 
         if order.complaint_id is not None:
             return Response(
-                [f"Complaint for the order {order_id} already exists. Complaint id: {order.complaint_id}"],
-                status=status.HTTP_400_BAD_REQUEST
+                [
+                    f"Complaint for the order {order_id} already exists. Complaint id: {order.complaint_id}"
+                ],
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
         complaint_serializer = serializers.ComplaintSerializer(data=request.data)
@@ -136,7 +142,9 @@ class ComplaintView(APIView):
         if complaint_serializer.is_valid():
             try:
                 complaint_serializer.save()
-                order.complaint_id = Complaint.objects.get(complaint_id=complaint_serializer.data.get("complaint_id"))
+                order.complaint_id = Complaint.objects.get(
+                    complaint_id=complaint_serializer.data.get("complaint_id")
+                )
 
                 order.save()
 
