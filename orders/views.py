@@ -9,6 +9,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from .models import OrderStatus, Order, Complaint
 from profielp.common import OrderStatusesDict, RolesDict
 from rest_framework import generics
+from django.db.models import Q
 
 
 class OrderStatusesList(generics.ListAPIView):
@@ -124,26 +125,35 @@ class OrderList(APIView):
     def get(self, request):
         try:
             if request.user.role_id.role == RolesDict.get("performer"):
-                current_orders = Order.objects.filter(
-                    performer_id=request.user.id,
-                    order_status_id=filter_order_status(OrderStatusesDict.get("done")),
-                ) | Order.objects.filter(
-                    performer_id=request.user.id,
-                    order_status_id=filter_order_status(
-                        OrderStatusesDict.get("declined")
-                    ),
+                current_orders = (
+                    Order.objects.filter(
+                        performer_id=request.user.id,
+                        order_status_id=filter_order_status(
+                            OrderStatusesDict.get("done")
+                        ),
+                    )
+                    | Order.objects.filter(
+                        performer_id=request.user.id,
+                        order_status_id=filter_order_status(
+                            OrderStatusesDict.get("declined")
+                        ),
+                    ).order_by("-date")
                 )
 
             elif request.user.role_id.role == RolesDict.get("customer"):
                 current_orders = Order.objects.filter(
-                    customer_id=request.user.id,
-                    order_status_id=filter_order_status(OrderStatusesDict.get("done")),
-                ) | Order.objects.filter(
-                    customer_id=request.user.id,
-                    order_status_id=filter_order_status(
-                        OrderStatusesDict.get("declined")
+                    Q(
+                        order_status_id=filter_order_status(
+                            OrderStatusesDict.get("done")
+                        ),
+                    )
+                    | Q(
+                        order_status_id=filter_order_status(
+                            OrderStatusesDict.get("declined")
+                        )
                     ),
-                )
+                    customer_id=request.user.id,
+                ).order_by("-date")
 
             return Response(
                 serializers.OrderCustomerSerializer(current_orders, many=True).data

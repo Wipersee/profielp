@@ -23,7 +23,6 @@ def get_order_status(status: str) -> (OrderStatus, str):
 
 def get_user_role_by_user_id(user_id):
     try:
-        # TODO use select_related
         user_role_id = User.objects.get(user_id=id).role_ir
         role = Role.objects.get(role_id=user_role_id).role
         error_message = None
@@ -34,7 +33,6 @@ def get_user_role_by_user_id(user_id):
     return role, error_message
 
 
-# TODO add status checking
 def get_all_orders_by_user_id(user_id: str) -> (Order, str):
     user_role = get_user_role_by_user_id(user_id)
     try:

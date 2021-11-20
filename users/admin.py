@@ -51,6 +51,7 @@ class AdminAdmin(UserAdmin):
                     "last_login",
                     "date_joined",
                     "phone_number",
+                    "is_staff",
                 ),
             },
         ),

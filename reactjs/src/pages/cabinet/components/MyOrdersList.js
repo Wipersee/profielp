@@ -57,6 +57,8 @@ const MyOrdersList = () => {
           <b>Priority </b>:&nbsp;&nbsp;&nbsp;<Tag color={item.is_high_priority === false ? "green" : "volcano"} key={item.is_high_priority}>
             {item.is_high_priority === false ? "LOW" : "HIGH"}
           </Tag>
+          <br /><br />
+          <b>Status </b>:&nbsp;&nbsp;&nbsp;{item.status}
         </List.Item>
       )}
     />

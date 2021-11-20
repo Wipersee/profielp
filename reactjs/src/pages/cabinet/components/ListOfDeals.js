@@ -66,7 +66,7 @@ const ListOfDeals = () => {
       key: "action",
       render: (
         text,
-        record //TODO: write onClick actions, API REQUEST to server
+        record
       ) => (
         <Space size="middle">
           <Text

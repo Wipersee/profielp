@@ -1,4 +1,4 @@
-import { Table, Empty, Typography, Drawer, Form, Input, Button } from "antd";
+import { Table, Empty, Typography, Drawer, Form, Input, Button, message } from "antd";
 import { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import axiosInstance from "../../../common/axios";
@@ -17,7 +17,7 @@ const ActiveDeal = () => {
     else {
       request_body["performer_approved"] = true;
     }
-    axiosInstance.patch(`orders/${data[0].order_id}`, request_body).then(response => console.log(response)).catch(err => console.log(err))
+    axiosInstance.patch(`orders/${data[0].order_id}`, request_body).then(response => message.success("Approved")).catch(err => message.error("Error occured"))
   }
 
   const getCoordinates = (data) => {
@@ -82,7 +82,7 @@ const ActiveDeal = () => {
       comment: val.comment,
       requester_id: id,
       order_id: data[0].order_id,
-    }).then(response => console.log(response)).catch(err => console.log(err))
+    }).then(response => message.success("Complaint created")).catch(err => message.error("Error occured"))
   }
 
   return (

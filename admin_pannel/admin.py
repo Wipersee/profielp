@@ -116,3 +116,26 @@ class ComplaintAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         qs = super(admin.ModelAdmin, self).get_queryset(request)
         return qs.filter(admin_id=request.user.id)
+
+
+@admin.register(Order, site=admin_pannel)
+class OrderAdmin(admin.ModelAdmin):
+    list_filter = [
+        "completion_date",
+        "date",
+        "is_high_priority",
+    ]
+    list_display = [
+        "customer_id",
+        "performer_id",
+        "customer_approved",
+        "performer_approved",
+        "date",
+    ]
+    search_fields = ["address", "complaint_id__complaint_id"]
+
+    def get_queryset(self, request):
+        qs = super(admin.ModelAdmin, self).get_queryset(request)
+        return qs.filter(
+            complaint_id__isnull=False, complaint_id__admin_id=request.user.id
+        )

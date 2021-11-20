@@ -8,7 +8,9 @@ class Role(models.Model):
 
     # Fields
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    role = models.CharField(max_length=16, choices=roles, unique=True, help_text="User role")
+    role = models.CharField(
+        max_length=16, choices=roles, unique=True, help_text="User role"
+    )
 
     # Methods
     def __str__(self):
@@ -19,7 +21,6 @@ class Role(models.Model):
 
 
 class PerformerSpecialization(models.Model):
-    # TODO add more specializations
     performer_specializations = [
         ("Plumber", "Plumber"),
         ("Electrician", "Electrician"),
@@ -52,7 +53,6 @@ class PerformerSpecialization(models.Model):
 
 
 class PerformerStatus(models.Model):
-    # TODO make statuses more informative
     performer_statuses = [
         ("NO", "no orders today"),
         ("OVER", "the working day is over"),
@@ -87,9 +87,7 @@ class User(AbstractUser):
     role_id = models.ForeignKey(
         "Role", on_delete=models.DO_NOTHING, null=True
     )  # many to one relationship with the Role table
-    phone_number = models.CharField(
-        max_length=31, help_text="User phone number"
-    )  # TODO add regex (optional)
+    phone_number = models.CharField(max_length=31, help_text="User phone number")
 
     avatar = models.ImageField(
         help_text="Image for the avatar",

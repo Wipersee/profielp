@@ -4,7 +4,7 @@ env/
 
 #JS Stuff
 .frontend/
-
+static
 #Django stuff
 db.sqlite3
 .vscode/*

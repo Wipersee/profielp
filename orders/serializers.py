@@ -56,7 +56,9 @@ class OrderCustomerSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
-
+        response["status"] = Order.objects.get(
+            order_id=instance.order_id
+        ).order_status_id.order_status
         response["user"] = CustomerSerializer(instance.customer_id).data
 
         return response
