@@ -4,10 +4,11 @@ env/
 
 #JS Stuff
 .frontend/
-
+static
 #Django stuff
 db.sqlite3
-
+.vscode/*
+media/*
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

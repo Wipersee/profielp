@@ -1,0 +1,156 @@
+[
+    {
+        "model": "users.role",
+        "pk": "39e32bdc-b63d-46de-96c5-47afa9e549e1",
+        "fields": {
+            "role": "ADMN"
+        }
+    },
+    {
+        "model": "users.role",
+        "pk": "850e62cc-498e-45e1-b393-ee30454e0488",
+        "fields": {
+            "role": "CUST"
+        }
+    },
+    {
+        "model": "users.role",
+        "pk": "b5d5cc32-7450-4c5d-9876-0eee3e6165f2",
+        "fields": {
+            "role": "PERF"
+        }
+    },
+    {
+        "model": "users.performerspecialization",
+        "pk": "02520822-79d3-4fcb-b473-7c0750cf7d45",
+        "fields": {
+            "performer_specialization": "Gardener"
+        }
+    },
+    {
+        "model": "users.performerspecialization",
+        "pk": "12274441-c762-4757-ad0b-2cc331780536",
+        "fields": {
+            "performer_specialization": "Cobbler"
+        }
+    },
+    {
+        "model": "users.performerspecialization",
+        "pk": "645e4a99-2015-4141-977a-a11c56dd3643",
+        "fields": {
+            "performer_specialization": "Roofer"
+        }
+    },
+    {
+        "model": "users.performerspecialization",
+        "pk": "64bd4a57-637a-467a-a5e0-b8008d6c456a",
+        "fields": {
+            "performer_specialization": "Tiler"
+        }
+    },
+    {
+        "model": "users.performerspecialization",
+        "pk": "aa421549-0f8a-44af-9267-52a48f099e0b",
+        "fields": {
+            "performer_specialization": "Plumber"
+        }
+    },
+    {
+        "model": "users.performerspecialization",
+        "pk": "b2717d3f-86aa-474e-92d5-a2f4235dc2ba",
+        "fields": {
+            "performer_specialization": "Mechanic"
+        }
+    },
+    {
+        "model": "users.performerspecialization",
+        "pk": "b98c9fa8-1ff9-4f4b-aa75-9a6731784bdd",
+        "fields": {
+            "performer_specialization": "Electrician"
+        }
+    },
+    {
+        "model": "users.performerspecialization",
+        "pk": "c208604e-e0df-4524-92e5-c503d9635509",
+        "fields": {
+            "performer_specialization": "Carpenter"
+        }
+    },
+    {
+        "model": "users.performerspecialization",
+        "pk": "df5d3a4e-987f-40af-aa1b-7f419f90fc66",
+        "fields": {
+            "performer_specialization": "Caretaker"
+        }
+    },
+    {
+        "model": "users.performerstatus",
+        "pk": "7c59ecb3-84fc-4cad-a3ad-5c850ec6a73a",
+        "fields": {
+            "performer_status": "NO"
+        }
+    },
+    {
+        "model": "users.performerstatus",
+        "pk": "af7c24ba-2027-4dd1-bab7-e77fa5682097",
+        "fields": {
+            "performer_status": "OVER"
+        }
+    },
+    {
+        "model": "users.performerstatus",
+        "pk": "b0690f97-8af1-4179-83cd-e5a76ceee1e1",
+        "fields": {
+            "performer_status": "FINISHED"
+        }
+    },
+    {
+        "model": "users.performerstatus",
+        "pk": "d878951b-a97c-40a5-848b-ea7db79425b8",
+        "fields": {
+            "performer_status": "MAKING"
+        }
+    },
+    {
+        "model": "orders.orderstatus",
+        "pk": "0539d5f6-b0a7-41b6-9090-3b60885d258d",
+        "fields": {
+            "order_status": "INPRGRS"
+        }
+    },
+    {
+        "model": "orders.orderstatus",
+        "pk": "7233a338-7ce7-4cf8-adcc-3b31bef0e52b",
+        "fields": {
+            "order_status": "DECLINED"
+        }
+    },
+    {
+        "model": "orders.orderstatus",
+        "pk": "a5fa650d-a5f0-49af-8df2-91aecdd08d6a",
+        "fields": {
+            "order_status": "ACCPTD"
+        }
+    },
+    {
+        "model": "orders.orderstatus",
+        "pk": "b9783ffd-f244-4ddd-9441-70fae6caf626",
+        "fields": {
+            "order_status": "ADMN"
+        }
+    },
+    {
+        "model": "orders.orderstatus",
+        "pk": "f60441e5-1168-4771-8c9f-e4325d3ebb35",
+        "fields": {
+            "order_status": "DONE"
+        }
+    },
+    {
+        "model": "orders.orderstatus",
+        "pk": "fe64bdb4-870a-45aa-a946-5e8a3f153ab6",
+        "fields": {
+            "order_status": "CRTD"
+        }
+    }
+]
