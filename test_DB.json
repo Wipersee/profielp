@@ -1,0 +1,138 @@
+[
+{
+    "model":"users.PerformerSpecialization",
+    "fields":{
+      "performer_specialization": "Plumber"
+    }
+  },
+  {
+  	"model":"users.PerformerSpecialization",
+    "fields":{
+      "performer_specialization": "Electrician"
+    }
+  },
+  {
+  	"model":"users.PerformerSpecialization",
+    "fields":{
+      "performer_specialization": "Caretaker"
+    }
+  },
+  {
+  	"model":"users.PerformerSpecialization",
+    "fields":{
+      "performer_specialization": "Carpenter"
+    }
+  },
+  {
+  	"model":"users.PerformerSpecialization",
+    "fields":{
+      "performer_specialization": "Cobbler"
+    }
+  },
+  {
+  	"model":"users.PerformerSpecialization",
+    "fields":{
+      "performer_specialization": "Gardener"
+    }
+  },
+  {
+  	"model":"users.PerformerSpecialization",
+    "fields":{
+      "performer_specialization": "Mechanic"
+    }
+  },
+  {
+  	"model":"users.PerformerSpecialization",
+    "fields":{
+      "performer_specialization": "Roofer"
+    }
+  },
+  {
+  	"model":"users.PerformerSpecialization",
+    "fields":{
+      "performer_specialization": "Tiler"
+    }
+  },
+
+  {
+    "model":"users.Role",
+    "fields":{
+      "role":"ADMN"
+    }
+  },
+  {
+    "model":"users.Role",
+    "fields":{
+      "role":"CUST"
+    }
+  },
+  {
+    "model":"users.Role",
+    "fields":{
+      "role":"PERF"
+    }
+  },
+
+  {
+    "model":"users.PerformerStatus",
+    "fields":{
+      "performer_status":"NO"
+    }
+  },
+  {
+    "model":"users.PerformerStatus",
+    "fields":{
+      "performer_status":"OVER"
+    }
+  },
+  {
+    "model":"users.PerformerStatus",
+    "fields":{
+      "performer_status":"MAKING"
+    }
+  },
+  {
+    "model":"users.PerformerStatus",
+    "fields":{
+      "performer_status":"FINISHED"
+    }
+  },
+
+
+  {
+    "model":"orders.OrderStatus",
+    "fields":{
+      "order_status":"CRTD"
+    }
+  },
+  {
+    "model":"orders.OrderStatus",
+    "fields":{
+      "order_status":"ACCPTD"
+    }
+  },
+  {
+    "model":"orders.OrderStatus",
+    "fields":{
+      "order_status":"INPRGRS"
+    }
+  },
+  {
+    "model":"orders.OrderStatus",
+    "fields":{
+      "order_status":"ADMN"
+    }
+  },
+  {
+    "model":"orders.OrderStatus",
+    "fields":{
+      "order_status":"DONE"
+    }
+  },
+  {
+    "model":"orders.OrderStatus",
+    "fields":{
+      "order_status":"DECLINED"
+    }
+  }
+]
