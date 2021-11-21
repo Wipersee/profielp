@@ -97,8 +97,7 @@ class PerformersView(generics.ListAPIView):
     serializer_class = serializers.PerformerShortSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = ProductFilter
-    permission_classes = [AllowAny]
-    authentication_classes = ()
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         queryset = Performer.objects.filter(

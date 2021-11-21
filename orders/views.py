@@ -81,7 +81,7 @@ class OrderDetailsView(APIView):
 
 
 class IncomingOrders(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         incoming_orders = Order.objects.filter(
@@ -92,7 +92,7 @@ class IncomingOrders(APIView):
 
 
 class OrderCurrent(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         try:
@@ -120,7 +120,7 @@ class OrderCurrent(APIView):
 
 
 class OrderList(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         try:
