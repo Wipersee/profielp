@@ -11,7 +11,7 @@ const Login = () => {
   let history = useHistory();
   const dispatch = useDispatch();
   const onFinish = (values) => {
-    axios.post('https://profielp.herokuapp.com/api/token/', { //TODO: before prod change this link
+    axios.post('http://localhost:8000/api/token/', { //TODO: before prod change this link
       username: values.username,
       password: values.password
     }).then(response => {
