@@ -37,8 +37,4 @@ tomli==1.2.2
 typing-extensions==3.10.0.2
 uritemplate==4.1.1
 urllib3==1.26.7
-<<<<<<< HEAD
-psycopg2-binary
-=======
 whitenoise==5.3.0
->>>>>>> 58e231b20fccb8c1db7d37005655b588def08033
