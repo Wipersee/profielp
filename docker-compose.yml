@@ -8,7 +8,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=profielb_db
+      - POSTGRES_DB=profielp_db
     networks:
       - main
     ports:
@@ -20,16 +20,14 @@ services:
   app:
     build: .
     env_file:
-      - ./.dev.env #rewrite to prod.env
-    command: sh -c "wait-for postgres:5432 && python manage.py collectstatic --no-input && python manage.py migrate && gunicorn --workers=2 --timeout 400 dashboard.wsgi -b 0.0.0.0:8000"
+      - ./.prod.env #rewrite to prod.env
+    command: sh -c "python manage.py collectstatic --no-input && python manage.py migrate && gunicorn --timeout 400 profielp.wsgi -b 0.0.0.0:8000"
     container_name: app
     depends_on:
       - postgres
-    expose:
-      - "8000"
+    hostname: app
     ports:
       - "8000:8000"
-    hostname: app
     image: app-image
     networks:
       - main
