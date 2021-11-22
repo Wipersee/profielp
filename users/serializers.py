@@ -229,6 +229,7 @@ class PerformerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Performer
         fields = (
+            "id",
             "username",
             "first_name",
             "last_name",

@@ -57,7 +57,6 @@ const Map = () => {
     }).catch(err => console.log(err))
   };
   const handleOrder = (perf_id, comment, addess, is_high_priority) => {
-    //TODO: need to make logic of blocked requests, e.g. when it's already one order => no access to order new one
     // message
     //   .loading("Action in progress..", 2.5)
     //   .then(() =>

@@ -1,6 +1,9 @@
 import React from "react";
-import { List, Avatar, Space } from "antd";
+import { List, Avatar, Tag } from "antd";
 import { MessageOutlined, LikeOutlined, StarOutlined } from "@ant-design/icons";
+import axiosInstance from "../../../common/axios";
+import { useState, useEffect } from "react";
+import moment from "moment";
 
 const listData = [];
 for (let i = 0; i < 23; i++) {
@@ -16,6 +19,12 @@ for (let i = 0; i < 23; i++) {
 }
 
 const MyOrdersList = () => {
+  const [data, setData] = useState([])
+
+  useEffect(() => {
+    axiosInstance.get('orders/list').then(response => setData(response.data)).catch(err => console.log(err))
+  }, [])
+
   return (
     <List
       itemLayout="vertical"
@@ -26,18 +35,30 @@ const MyOrdersList = () => {
         },
         pageSize: 2,
       }}
-      dataSource={listData}
-      renderItem={(item) => (
+      dataSource={data}
+      renderItem={(item, idx) => (
         <List.Item
-          key={item.title}
-          extra={<img width={272} alt="logo" src={item.image} />}
+          key={idx}
+          extra={
+            <img
+              width={272}
+              alt="logo"
+              src={"https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"}
+            />
+          }
         >
           <List.Item.Meta
-            avatar={<Avatar src={item.avatar} />}
-            title={<a href={item.href}>{item.title}</a>}
-            description={item.description}
+            description={item.user.username}
+            title={moment(item.date).format('MMMM Do YYYY, h:mm')}
           />
-          {item.content}
+          <b>Comment </b>: {item.comment} <br /><br />
+
+          <b>Address </b> : &nbsp;&nbsp; {item.address}&nbsp;&nbsp;&nbsp;
+          <b>Priority </b>:&nbsp;&nbsp;&nbsp;<Tag color={item.is_high_priority === false ? "green" : "volcano"} key={item.is_high_priority}>
+            {item.is_high_priority === false ? "LOW" : "HIGH"}
+          </Tag>
+          <br /><br />
+          <b>Status </b>:&nbsp;&nbsp;&nbsp;{item.status}
         </List.Item>
       )}
     />

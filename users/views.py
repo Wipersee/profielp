@@ -93,7 +93,6 @@ class PerformerSpecializationsView(generics.ListAPIView):
     authentication_classes = ()
 
 
-# TODO: REWRITE TO ISAUTH!!!!
 class PerformersView(generics.ListAPIView):
     serializer_class = serializers.PerformerShortSerializer
     filter_backends = (filters.DjangoFilterBackend,)
@@ -102,7 +101,7 @@ class PerformersView(generics.ListAPIView):
 
     def get_queryset(self):
         queryset = Performer.objects.filter(
-            latitude__isnull=False, longitude__isnull=False
+            latitude__isnull=False, longitude__isnull=False, is_active=True
         )
         return queryset
 
@@ -122,5 +121,5 @@ class UsersOrdersView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, user_id):
-        """Get orders by user id (TODO add filters and checking try-except/if)"""
+        """Get orders by user id"""
         return Response(get_all_orders_by_user_id(user_id=user_id))

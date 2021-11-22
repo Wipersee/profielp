@@ -12,8 +12,15 @@ const SearchGroup = () => {
   const dispatch = useDispatch()
   const { loading } = useSelector((state) => state.performersReducer)
   const onFinish = (values) => {
+    let str = ''
+    if (values.description !== undefined) {
+      str = `?search=${values.description}&min_price=${values.price[0]}&max_price=${values.price[1]}`
+    }
+    else {
+      str = `?min_price=${values.price[0]}&max_price=${values.price[1]}`
+    }
     dispatch(
-      fetchData(`/users/performers?description=${values.description}&min_price=${values.price[0]}&max_price=${values.price[1]}`, "PERFORMERS")
+      fetchData(`/users/performers${str}`, "PERFORMERS")
     );
   }
   return (
@@ -24,7 +31,7 @@ const SearchGroup = () => {
         name="register"
         onFinish={onFinish}
         initialValues={{
-          prefix: "38",
+          price: [1, 999]
         }}
         scrollToFirstError
       >

@@ -3,5 +3,12 @@ from . import views
 
 
 urlpatterns = [
-    path('', views.index ),
+    path("", views.index),
+    path("agreement", views.index),
+    path("cabinet/my-data", views.index),
+    path("cabinet/my-orders", views.index),
+    path("cabinet/active-deal", views.index),
+    path("cabinet/settings", views.index),
+    path("login", views.index),
+    path("registration", views.index),
 ]

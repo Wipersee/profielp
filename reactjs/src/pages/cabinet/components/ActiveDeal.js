@@ -1,12 +1,24 @@
-import { Table, Empty, Typography, Drawer, Form, Input, Button } from "antd";
+import { Table, Empty, Typography, Drawer, Form, Input, Button, message } from "antd";
 import { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import axiosInstance from "../../../common/axios";
-
+import { useSelector } from "react-redux";
 
 const ActiveDeal = () => {
   const [data, setData] = useState([]);
   const [visible, setVisibe] = useState(false)
+  const { id, role } = useSelector((state) => state.userReducer);
+
+  const handleApprove = () => {
+    let request_body = {}
+    if (role === "CUST") {
+      request_body["customer_approved"] = true;
+    }
+    else {
+      request_body["performer_approved"] = true;
+    }
+    axiosInstance.patch(`orders/${data[0].order_id}`, request_body).then(response => message.success("Approved")).catch(err => message.error("Error occured"))
+  }
 
   const getCoordinates = (data) => {
     if (data.length > 0) {
@@ -45,16 +57,32 @@ const ActiveDeal = () => {
       key: "complaint",
       render: (
         text,
-        record //TODO: write onClick actions, API REQUEST to server
+        record
       ) => (
         <Typography.Text type="danger" onClick={() => setVisibe(true)} >
           Complaint
         </Typography.Text>
       ),
     },
+    {
+      title: "Approve",
+      key: "approve",
+      render: (
+        text,
+        record
+      ) => (
+        <Typography.Text type="success" onClick={handleApprove} >
+          Approve
+        </Typography.Text>
+      ),
+    },
   ];
   const onFinish = (val) => {
-    console.log(val)
+    axiosInstance.post('orders/complaint', {
+      comment: val.comment,
+      requester_id: id,
+      order_id: data[0].order_id,
+    }).then(response => message.success("Complaint created")).catch(err => message.error("Error occured"))
   }
 
   return (
