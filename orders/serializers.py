@@ -1,10 +1,8 @@
 from rest_framework import serializers
 from orders.models import Order, Complaint, OrderStatus
 from profielp.common import OrderStatusesDict
-from users.models import Customer, Performer
 from users.serializers import CustomerSerializer
 
-# from users.serializers import CustomerSerializer, PerformerSerializer
 from orders.services.bl import get_order_status
 
 
@@ -21,6 +19,7 @@ class ComplaintSerializer(serializers.ModelSerializer):
     class Meta:
         model = Complaint
         fields = [
+            "complaint_id",
             "admin_id",
             "requester_id",
             "comment",
@@ -29,6 +28,11 @@ class ComplaintSerializer(serializers.ModelSerializer):
             "resolve_date",
             "resolved",
         ]
+
+    def create(self, validated_data):
+        complaint = Complaint(**validated_data)
+        complaint.save()
+        return complaint
 
 
 class OrderCustomerSerializer(serializers.ModelSerializer):
@@ -52,7 +56,9 @@ class OrderCustomerSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
-
+        response["status"] = Order.objects.get(
+            order_id=instance.order_id
+        ).order_status_id.order_status
         response["user"] = CustomerSerializer(instance.customer_id).data
 
         return response
@@ -81,7 +87,6 @@ class OrderSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         order = Order(
             **validated_data,
-            order_status_id=OrderStatus.objects.get(order_status="CRTD")
         )
         order.save()
         return order
@@ -120,9 +125,15 @@ class OrderSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         response = super().to_representation(instance)
 
-        response["order_status"] = OrderStatusSerializer(
-            instance.order_status_id
-        ).data.get("order_status", None)
+        # I have no idea why it works (.order_status_id.order_status) but it works and I don't care
+        order_status_id = Order.objects.get(
+            order_id=instance.order_id
+        ).order_status_id.order_status
+        order_status = Order.objects.get(
+            order_id=instance.order_id
+        ).order_status_id.order_status
+        response["order_status_id"] = order_status_id
+        response["order_status"] = order_status
 
         response["complaint"] = ComplaintSerializer(instance.complaint_id).data
 
