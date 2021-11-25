@@ -2,7 +2,9 @@ from django.db.models import Count
 
 from orders.models import OrderStatus, Order, Complaint
 from users.models import User, Role, Admin
+from logger.logger import set_logger
 
+logger = set_logger(name=__name__)
 
 def filter_order_status(status):
     return OrderStatus.objects.get(order_status=status)

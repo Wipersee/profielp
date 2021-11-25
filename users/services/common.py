@@ -1,6 +1,10 @@
 from users.models import Customer, Performer
 from rest_framework import serializers
 
+from logger.logger import set_logger
+
+logger = set_logger(name=__name__)
+
 
 def get_customer(user_id):
     return Customer.objects.get(id=user_id)

@@ -12,6 +12,10 @@ from datetime import datetime, timezone
 import django.contrib.auth.password_validation as validators
 from .services.common import get_performer, get_customer, is_required
 
+from logger.logger import set_logger
+
+logger = set_logger(name=__name__)
+
 
 class RoleSerializer(serializers.ModelSerializer):
     class Meta:

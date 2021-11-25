@@ -7,6 +7,9 @@ from users.serializers import (
     PerformerUpdateSerializer,
     CustomerUpdateAvatar,
 )
+from logger.logger import set_logger
+
+logger = set_logger(name=__name__)
 
 user_tables = {
     "CUST": (

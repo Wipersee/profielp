@@ -11,6 +11,10 @@ from profielp.common import OrderStatusesDict, RolesDict
 from rest_framework import generics
 from django.db.models import Q
 
+from logger.logger import set_logger
+
+logger = set_logger(name=__name__)
+
 
 class OrderStatusesList(generics.ListAPIView):
     queryset = OrderStatus.objects.all()
@@ -126,18 +130,18 @@ class OrderList(APIView):
         try:
             if request.user.role_id.role == RolesDict.get("performer"):
                 current_orders = (
-                    Order.objects.filter(
-                        performer_id=request.user.id,
-                        order_status_id=filter_order_status(
-                            OrderStatusesDict.get("done")
-                        ),
-                    )
-                    | Order.objects.filter(
-                        performer_id=request.user.id,
-                        order_status_id=filter_order_status(
-                            OrderStatusesDict.get("declined")
-                        ),
-                    ).order_by("-date")
+                        Order.objects.filter(
+                            performer_id=request.user.id,
+                            order_status_id=filter_order_status(
+                                OrderStatusesDict.get("done")
+                            ),
+                        )
+                        | Order.objects.filter(
+                    performer_id=request.user.id,
+                    order_status_id=filter_order_status(
+                        OrderStatusesDict.get("declined")
+                    ),
+                ).order_by("-date")
                 )
 
             elif request.user.role_id.role == RolesDict.get("customer"):

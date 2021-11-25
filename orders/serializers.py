@@ -5,6 +5,10 @@ from users.serializers import CustomerSerializer
 
 from orders.services.bl import get_order_status
 
+from logger.logger import set_logger
+
+logger = set_logger(name=__name__)
+
 
 class OrderStatusSerializer(serializers.ModelSerializer):
     class Meta:
@@ -112,7 +116,7 @@ class OrderSerializer(serializers.ModelSerializer):
             if new_order_status_id and old_order_status_id != new_order_status_id:
                 instance.order_status_id = new_order_status_id
                 if new_order_status_id.order_status == OrderStatusesDict.get(
-                    "accepted"
+                        "accepted"
                 ):  # Handling logic of coordinates updating
                     performer = instance.performer_id
                     performer.longitude = instance.longitude
@@ -144,7 +148,6 @@ class SegmentSerializer(serializers.ModelSerializer):
     class Meta:
         many = True
         model = Order
-
 
 # def update(self, instance, validated_data):
 #     """

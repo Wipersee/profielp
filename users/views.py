@@ -13,7 +13,9 @@ from .models import Customer, Performer, PerformerSpecialization
 from .services.filters import ProductFilter
 from django_filters import rest_framework as filters
 
-# Create your views here.
+from logger.logger import set_logger
+
+logger = set_logger(name=__name__)
 
 
 class GetUser(APIView):
@@ -35,7 +37,6 @@ class GetUser(APIView):
 
 
 class UpdateUserAvatar(generics.UpdateAPIView):
-
     serializer_class = serializers.ChangeUserAvatarSerializer
 
     def get_object(self):

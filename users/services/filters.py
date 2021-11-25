@@ -2,6 +2,10 @@ from django_filters import rest_framework as filters
 from users.models import Performer
 from django.db.models import Q
 
+from logger.logger import set_logger
+
+logger = set_logger(name=__name__)
+
 
 class ProductFilter(filters.FilterSet):
     min_price = filters.NumberFilter(field_name="avg_price_per_hour", lookup_expr="gte")
