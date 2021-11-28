@@ -12,9 +12,9 @@ from rest_framework import generics
 from .models import Customer, Performer, PerformerSpecialization
 from .services.filters import ProductFilter
 from django_filters import rest_framework as filters
-
+from profielp.logging import set_logger
 # Create your views here.
-
+logger = set_logger(__name__)
 
 class GetUser(APIView):
     """Endpoint for getting info about logged user"""
@@ -22,6 +22,7 @@ class GetUser(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
+        logger.info(f"User {request.user} found")
         return Response(get_user(request.user))
 
     def patch(self, request):
@@ -30,7 +31,9 @@ class GetUser(APIView):
         )
         if serializer.is_valid():
             serializer.save()
+            logger.info(f"User {request.user} updated")
             return Response(serializer.data)
+        logger.error(f"User {validated_data.get('username')} not updated {serializer.errors}")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -49,11 +52,14 @@ class LogoutAndBlacklistRefreshTokenForUserView(APIView):
 
     def post(self, request):
         try:
+            user = request.user
             refresh_token = request.data["refresh_token"]
             token = RefreshToken(refresh_token)
             token.blacklist()
+            logger.info(f"User {user} logged out")
             return Response(status=status.HTTP_205_RESET_CONTENT)
         except Exception as e:
+            logger.info(f"Error {e}")
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -68,7 +74,9 @@ class ChangePassword(APIView):
         )
         if serializer.is_valid():
             serializer.save()
+            logger.info(f"User {request.user} changed password")
             return Response("Success")
+        logger.info(f"User {validated_data.get('username')} didn't change password {serializer.errors}")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -87,6 +95,7 @@ class PerformerRegistration(generics.CreateAPIView):
 
 
 class PerformerSpecializationsView(generics.ListAPIView):
+    logger.info(f"Performer specializations list requested")
     queryset = PerformerSpecialization.objects.all()
     serializer_class = serializers.PerformerSpecializationSerializer
     permission_classes = [AllowAny]
@@ -103,6 +112,7 @@ class PerformersView(generics.ListAPIView):
         queryset = Performer.objects.filter(
             latitude__isnull=False, longitude__isnull=False, is_active=True
         )
+        logger.info(f"Performers list requested")
         return queryset
 
 
@@ -114,6 +124,7 @@ class PerformerDetaildView(generics.RetrieveAPIView):
     def get_queryset(self):
         pk = self.kwargs.get(self.lookup_url_kwarg)
         performer = Performer.objects.filter(id=pk)
+        logger.info(f"Performer {performer} requested")
         return performer
 
 
@@ -122,4 +133,5 @@ class UsersOrdersView(APIView):
 
     def get(self, request, user_id):
         """Get orders by user id"""
+        logger.info(f"Orders of user {request.user} requested")
         return Response(get_all_orders_by_user_id(user_id=user_id))

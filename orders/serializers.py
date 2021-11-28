@@ -4,7 +4,9 @@ from profielp.common import OrderStatusesDict
 from users.serializers import CustomerSerializer
 
 from orders.services.bl import get_order_status
+from profielp.logging import set_logger
 
+logger = set_logger(__name__)
 
 class OrderStatusSerializer(serializers.ModelSerializer):
     class Meta:

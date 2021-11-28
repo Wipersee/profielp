@@ -1,1 +1,1 @@
-export const url = "https://profielp.herokuapp.com"
+export const url = "http://localhost:8000"

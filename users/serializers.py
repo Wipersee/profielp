@@ -11,7 +11,9 @@ from .models import (
 from datetime import datetime, timezone
 import django.contrib.auth.password_validation as validators
 from .services.common import get_performer, get_customer, is_required
+from profielp.logging import set_logger
 
+logger = set_logger(__name__)
 
 class RoleSerializer(serializers.ModelSerializer):
     class Meta:
@@ -55,7 +57,7 @@ class ChangeUserAvatarSerializer(serializers.ModelSerializer):
         instance.avatar.delete(save=False)
         photo_data = validated_data["avatar"]
         instance.avatar.save(f"{instance.username}_photo.jpg", photo_data, save=True)
-
+        logger.info(f"Avatar of {validated_data.get('username')} updated")
         return instance
 
 
@@ -171,6 +173,7 @@ class CustomerRegistrationSerializer(serializers.ModelSerializer):
         user = Customer(**validated_data, role_id=Role.objects.get(role="CUST"))
         user.set_password(password)
         user.save()
+        logger.info(f"User {validated_data.get('username')} created")
         return user
 
 
@@ -198,7 +201,6 @@ class PerformerRegistrationSerializer(serializers.ModelSerializer):
         )
 
     def create(self, validated_data):
-        print(validated_data)
         password = validated_data.pop("password")
         performer_specialization_id = validated_data.pop("performer_specialization_id")
         user = Performer(
@@ -210,6 +212,7 @@ class PerformerRegistrationSerializer(serializers.ModelSerializer):
         )
         user.set_password(password)
         user.save()
+        logger.info(f"User {validated_data.get('username')} created")
         return user
 
 
