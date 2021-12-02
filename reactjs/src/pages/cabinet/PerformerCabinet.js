@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./css/index.css";
 import { Switch, Route, Link, Redirect } from "react-router-dom";
 import CabinetLayout from "./components/CabinetLayout";
-import { Menu } from "antd";
+import { Menu, Badge } from "antd";
 import {
   LikeOutlined,
   DollarCircleOutlined,
@@ -17,8 +17,14 @@ import MyOrdersList from "./components/MyOrdersList";
 import ListOfDeals from "./components/ListOfDeals";
 import ActiveDeal from "./components/ActiveDeal";
 import PerformerSettings from "./components/PerformerSettings";
+import axiosInstance from "../../common/axios";
 
 const PerformerCabinet = ({ match }) => {
+
+  const [notifications, setNotifications] = useState([])
+
+  useEffect(() => { axiosInstance.get('orders/incoming').then(response => setNotifications(response.data)).catch(err => console.log(err)) }, [])
+
   const menuItems = (
     <>
       <Menu.Item key="1" icon={<FileTextOutlined />}>
@@ -31,7 +37,9 @@ const PerformerCabinet = ({ match }) => {
         <Link to={`${match.url}/active-deal`}>Active deal</Link>
       </Menu.Item>
       <Menu.Item key="4" icon={<OrderedListOutlined />}>
-        <Link to={`${match.url}/list-of-deals`}>List of deals</Link>
+        <Badge count={notifications.length} overflowCount={10}>
+          <Link to={`${match.url}/list-of-deals`}>List of deals</Link>
+        </Badge>
       </Menu.Item>
       {/* <Menu.Item key="5" icon={<LikeOutlined />}>
         <Link to={`${match.url}/my-likes`}>My likes</Link>

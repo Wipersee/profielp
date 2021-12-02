@@ -2,7 +2,7 @@ import axios from "axios";
 import store from './../store/store'
 
 const axiosInstance = axios.create({
-    baseURL: 'http://localhost:8000/api/', //TODO: rewrite before prod
+    baseURL: 'https://profielp.herokuapp.com/api/', //TODO: rewrite before prod
     headers: {
         'Authorization': "Bearer " + localStorage.getItem('access_token'),
         'Content-Type': 'application/json',
