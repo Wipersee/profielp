@@ -35,7 +35,6 @@ class ComplaintAdmin(admin.ModelAdmin):
         "resolve_date",
     ]
     search_fields = ["address", "complaint__id"]
-    inlines = [OrderInline]
 
 
 @admin.register(Order)
