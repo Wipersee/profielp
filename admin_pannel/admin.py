@@ -102,7 +102,6 @@ class ComplaintAdmin(admin.ModelAdmin):
     list_filter = ["date", "resolve_date", "resolved"]
     list_display = ["requester_id", "comment", "date", "resolve_date", "resolved"]
     search_fields = ["address", "complaint__id"]
-    inlines = [OrderInline]
     exclude = [
         "complaint_id",
     ]
