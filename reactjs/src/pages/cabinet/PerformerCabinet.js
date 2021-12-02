@@ -37,7 +37,7 @@ const PerformerCabinet = ({ match }) => {
         <Link to={`${match.url}/active-deal`}>Active deal</Link>
       </Menu.Item>
       <Menu.Item key="4" icon={<OrderedListOutlined />}>
-        <Badge count={notifications.length} overflowCount={10}>
+        <Badge count={notifications.length} overflowCount={10} offset={[15, 6]}>
           <Link to={`${match.url}/list-of-deals`}>List of deals</Link>
         </Badge>
       </Menu.Item>
